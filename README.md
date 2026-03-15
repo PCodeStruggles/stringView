@@ -1,6 +1,6 @@
 # stringView
 
-**LEARNING PURPOSES**
+**LEARNING PURPOSES**<br>
 C rewrite of string view concept.
 
 
