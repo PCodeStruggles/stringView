@@ -91,7 +91,7 @@ sv sv_remove_prefix(const sv sv, const char* prefix)
     if(prefix == NULL) SV_PANIC("sv_remove_prefix: prefix argument cannot be NULL");
     size_t prefix_len = strlen(prefix);
     size_t i = 0;
-    while(sv.data[i] == prefix[i]) i++;
+    while(i < prefix_len && sv.data[i] == prefix[i]) i++;
     if(i == prefix_len) {
         return (struct string_view) { .data = sv.data + i, .count = sv.count - i };
     } else {
