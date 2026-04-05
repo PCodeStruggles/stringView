@@ -26,13 +26,37 @@ typedef struct string_view sv;
 sv sv_from_cstr(const char* cstr);
 
 /*
- * Return the char at position pos, if pos out of bounds or sv.count == 0 returns -1
+ * Returns the char at position pos, if pos out of bounds or sv.count == 0 returns 0 'NULL' char
  */
 char sv_at(const sv sv, const size_t pos);
 
-#ifdef SV_IMPLEMENTATION
+/*
+ * Returns the first char of the string, returns 0 'NULL' char if string is empty
+ */
+char sv_front(const sv sv);
 
-// IMPLEMENTATION
+/*
+ * Returns the last char of the string, returns 0 'NULL' if string is empty
+ */
+char sv_back(const sv sv);
+
+/*
+ * Returns the lenght of the string
+ */
+size_t sv_len(const sv sv);
+
+/*
+ * Returns whether the string is empty or not
+ */
+bool sv_empty(const sv sv);
+
+/*
+ * Returns a sv without the prefix if such prefix is found, otherwise return original sv
+ */
+sv sv_remove_prefix(const sv sv, const char* prefix);
+
+
+#ifdef SV_IMPLEMENTATION
 
 sv sv_from_cstr(const char* cstr)
 {
@@ -42,8 +66,37 @@ sv sv_from_cstr(const char* cstr)
 
 char sv_at(const sv sv, const size_t pos)
 {
-    if(sv.count == 0 || pos >= sv.count) return -1;
+    if(sv.count == 0 || pos >= sv.count) return 0;
     return sv.data[pos];
+}
+
+char sv_front(const sv sv)
+{
+    if(sv.count == 0) return 0;
+    return sv.data[0];
+}
+
+char sv_back(const sv sv)
+{
+    if(sv.count == 0) return 0;
+    return sv.data[sv.count - 1];
+}
+
+size_t sv_len(const sv sv) { return sv.count; }
+
+bool sv_empty(const sv sv) { return sv.count == 0; }
+
+sv sv_remove_prefix(const sv sv, const char* prefix)
+{
+    if(prefix == NULL) SV_PANIC("sv_remove_prefix: prefix argument cannot be NULL");
+    size_t prefix_len = strlen(prefix);
+    size_t i = 0;
+    while(sv.data[i] == prefix[i]) i++;
+    if(i == prefix_len) {
+        return (struct string_view) { .data = sv.data + i, .count = sv.count - i };
+    } else {
+        return sv;
+    }
 }
 
 #endif // SV_IMPLEMENTATION
