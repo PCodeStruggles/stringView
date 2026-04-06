@@ -327,9 +327,168 @@ void sv_remove_prefix_passingString(void)
     TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
     TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
     sv actual_no_prefix = sv_remove_prefix(actual, "name_");
-    TEST_ASSERT_EQUAL_STRING_LEN("surname", actual_no_prefix.data, sv_len(actual_no_prefix));
+    TEST_ASSERT_EQUAL_STRING_LEN("surname", 
+            actual_no_prefix.data, sv_len(actual_no_prefix));
 }
 
+void sv_remove_prefix_passingString2(void)
+{
+    const char* cstr = "name__surname";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_prefix = sv_remove_prefix(actual, "name_");
+    TEST_ASSERT_EQUAL_STRING_LEN("_surname", 
+            actual_no_prefix.data, sv_len(actual_no_prefix));
+}
+
+void sv_remove_prefix_passingString3(void)
+{
+    const char* cstr = "name_name_surname";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_prefix = sv_remove_prefix(actual, "name_");
+    TEST_ASSERT_EQUAL_STRING_LEN("name_surname", 
+            actual_no_prefix.data, sv_len(actual_no_prefix));
+}
+
+void sv_remove_prefix_passingStringWithUnmatchingPrefix(void)
+{
+    const char* cstr = "nome_name_surname";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_prefix = sv_remove_prefix(actual, "name_");
+    TEST_ASSERT_EQUAL_STRING_LEN("nome_name_surname", 
+            actual_no_prefix.data, sv_len(actual_no_prefix));
+}
+
+void sv_remove_prefix_passingStringWithUnmatchingPrefix2(void)
+{
+    const char* cstr = "nam_surname";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_prefix = sv_remove_prefix(actual, "name_");
+    TEST_ASSERT_EQUAL_STRING_LEN("nam_surname", 
+            actual_no_prefix.data, sv_len(actual_no_prefix));
+}
+
+void sv_remove_prefix_passingEmptrySv(void)
+{
+    const char* cstr = "";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_prefix = sv_remove_prefix(actual, "name_");
+    TEST_ASSERT_EQUAL_STRING_LEN("", 
+            actual_no_prefix.data, sv_len(actual_no_prefix));
+}
+
+/* sv_remove_suffix Tests */
+
+void sv_remove_suffix_passingString(void)
+{
+    const char* cstr = "name_surname";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    printf("actual: "SV_FMT"\n", SV_ARG(actual));
+    sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+    printf("no_suffix: "SV_FMT"\n", SV_ARG(actual_no_suffix));
+    TEST_ASSERT_EQUAL_STRING_LEN("name_", 
+            actual_no_suffix.data, sv_len(actual_no_suffix));
+}
+
+void sv_remove_suffix_passingString2(void)
+{
+    const char* cstr = "name__surname";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+    TEST_ASSERT_EQUAL_STRING_LEN("name__", 
+            actual_no_suffix.data, sv_len(actual_no_suffix));
+}
+
+void sv_remove_suffix_passingString3(void)
+{
+    const char* cstr = "name_name_surname";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+    TEST_ASSERT_EQUAL_STRING_LEN("name_name_", 
+            actual_no_suffix.data, sv_len(actual_no_suffix));
+}
+
+void sv_remove_suffix_passingString4(void)
+{
+    const char* cstr = "_surname";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+    TEST_ASSERT_EQUAL_STRING_LEN("_", 
+            actual_no_suffix.data, sv_len(actual_no_suffix));
+}
+
+void sv_remove_suffix_passingString5(void)
+{
+    const char* cstr = "surname";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+    TEST_ASSERT_EQUAL_STRING_LEN("", 
+            actual_no_suffix.data, sv_len(actual_no_suffix));
+}
+
+void sv_remove_suffix_passingStringWithUnmatchingPrefix(void)
+{
+    const char* cstr = "name_name_surnome";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_suffix = sv_remove_suffix(actual, "surnome");
+    TEST_ASSERT_EQUAL_STRING_LEN("name_name_surnome", 
+            actual_no_suffix.data, sv_len(actual_no_suffix));
+}
+
+void sv_remove_suffix_passingStringWithUnmatchingPrefix2(void)
+{
+    const char* cstr = "name_name_surname_";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+    TEST_ASSERT_EQUAL_STRING_LEN("name_name_surname_", 
+            actual_no_suffix.data, sv_len(actual_no_suffix));
+}
+
+void sv_remove_suffix_passingEmptrySv(void)
+{
+    const char* cstr = "";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+    TEST_ASSERT_EQUAL_STRING_LEN("", 
+            actual_no_suffix.data, sv_len(actual_no_suffix));
+}
+
+void sv_remove_suffixprefix_combined(void)
+{
+    const char* cstr = "sv_remove_suffix";
+    sv actual = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+    sv actual_no_prefix = sv_remove_prefix(actual, "sv_");
+    sv actual_no_suffix = sv_remove_suffix(actual_no_prefix, "_suffix");
+    TEST_ASSERT_EQUAL_STRING_LEN("remove", 
+            actual_no_suffix.data, sv_len(actual_no_suffix));
+}
 
 int main(void)
 {
@@ -366,6 +525,20 @@ int main(void)
     RUN_TEST(sv_empty_passingLongString1);
     RUN_TEST(sv_empty_passingLongString2);
     RUN_TEST(sv_remove_prefix_passingString);
+    RUN_TEST(sv_remove_prefix_passingString2);
+    RUN_TEST(sv_remove_prefix_passingString3);
+    RUN_TEST(sv_remove_prefix_passingStringWithUnmatchingPrefix);
+    RUN_TEST(sv_remove_prefix_passingStringWithUnmatchingPrefix2);
+    RUN_TEST(sv_remove_prefix_passingEmptrySv);
+    RUN_TEST(sv_remove_suffix_passingString);
+    RUN_TEST(sv_remove_suffix_passingString2);
+    RUN_TEST(sv_remove_suffix_passingString3);
+    RUN_TEST(sv_remove_suffix_passingString4);
+    RUN_TEST(sv_remove_suffix_passingString5);
+    RUN_TEST(sv_remove_suffix_passingStringWithUnmatchingPrefix);
+    RUN_TEST(sv_remove_suffix_passingStringWithUnmatchingPrefix2);
+    RUN_TEST(sv_remove_suffix_passingEmptrySv);
+    RUN_TEST(sv_remove_suffixprefix_combined);
     UNITY_END();
     return 0;
 }
