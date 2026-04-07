@@ -127,16 +127,6 @@ void sv_at_passingLongString2(void)
 // TODO: Add tests to verify correct behaviour 
 // when we shift forward the data pointer
 
-void sv_front_passingEmptyString(void)
-{
-    const char* cstr = "";
-    sv actual = sv_from_cstr(cstr);
-    TEST_ASSERT_EQUAL_size_t(0, actual.count);
-    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-    char c = sv_front(actual);
-    TEST_ASSERT_EQUAL_INT(0, c);
-}
-
 void sv_front_passingString(void)
 {
     const char* cstr = "name";
@@ -394,9 +384,7 @@ void sv_remove_suffix_passingString(void)
     sv actual = sv_from_cstr(cstr);
     TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
     TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-    printf("actual: "SV_FMT"\n", SV_ARG(actual));
     sv actual_no_suffix = sv_remove_suffix(actual, "surname");
-    printf("no_suffix: "SV_FMT"\n", SV_ARG(actual_no_suffix));
     TEST_ASSERT_EQUAL_STRING_LEN("name_", 
             actual_no_suffix.data, sv_len(actual_no_suffix));
 }
@@ -505,7 +493,6 @@ int main(void)
     RUN_TEST(sv_at_passingString2);
     RUN_TEST(sv_at_passingLongString1);
     RUN_TEST(sv_at_passingLongString2);
-    RUN_TEST(sv_front_passingEmptyString);
     RUN_TEST(sv_front_passingString);
     RUN_TEST(sv_front_passingLongString1);
     RUN_TEST(sv_front_passingLongString2);

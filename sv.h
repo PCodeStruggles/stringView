@@ -1,6 +1,7 @@
 #ifndef SV_H
 #define SV_H
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -33,7 +34,7 @@ char sv_at(const sv sv, const size_t pos);
 /*
  * Returns the first char of the string, returns 0 'NULL' char if string is empty
  */
-char sv_front(const sv sv);
+#define sv_front(sv) (sv).data[assert((sv).count > 0), 0]
 
 /*
  * Returns the last char of the string, returns 0 'NULL' if string is empty
@@ -72,12 +73,6 @@ char sv_at(const sv sv, const size_t pos)
 {
     if(sv.count == 0 || pos >= sv.count) return 0;
     return sv.data[pos];
-}
-
-char sv_front(const sv sv)
-{
-    if(sv.count == 0) return 0;
-    return sv.data[0];
 }
 
 char sv_back(const sv sv)
