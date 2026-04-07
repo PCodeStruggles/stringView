@@ -32,7 +32,7 @@ sv sv_from_cstr(const char* cstr);
 char sv_at(const sv sv, const size_t pos);
 
 /*
- * Returns the first char of the string, returns 0 'NULL' char if string is empty
+ * Returns the first char of the string with boundary check
  */
 #define sv_front(sv) (sv).data[assert((sv).count > 0), 0]
 
