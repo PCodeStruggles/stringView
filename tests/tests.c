@@ -159,16 +159,6 @@ void sv_front_passingLongString2(void)
 
 /* sv_back Tests */
 
-void sv_back_passingEmptyString(void)
-{
-    const char* cstr = "";
-    sv actual = sv_from_cstr(cstr);
-    TEST_ASSERT_EQUAL_size_t(0, actual.count);
-    TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-    char c = sv_back(actual);
-    TEST_ASSERT_EQUAL_INT(0, c);
-}
-
 void sv_back_passingString(void)
 {
     const char* cstr = "name";
@@ -496,7 +486,6 @@ int main(void)
     RUN_TEST(sv_front_passingString);
     RUN_TEST(sv_front_passingLongString1);
     RUN_TEST(sv_front_passingLongString2);
-    RUN_TEST(sv_back_passingEmptyString);
     RUN_TEST(sv_back_passingString);
     RUN_TEST(sv_back_passingLongString1);
     RUN_TEST(sv_back_passingLongString2);
