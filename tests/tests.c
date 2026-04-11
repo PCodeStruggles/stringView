@@ -358,7 +358,7 @@ void sv_remove_suffix_passingString5(void) {
                                sv_len(actual_no_suffix));
 }
 
-void sv_remove_suffix_passingStringWithUnmatchingPrefix(void) {
+void sv_remove_suffix_passingStringWithUnmatchingSuffix(void) {
   const char *cstr = "name_name_surnome";
   sv actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
@@ -368,7 +368,7 @@ void sv_remove_suffix_passingStringWithUnmatchingPrefix(void) {
                                sv_len(actual_no_suffix));
 }
 
-void sv_remove_suffix_passingStringWithUnmatchingPrefix2(void) {
+void sv_remove_suffix_passingStringWithUnmatchingSuffix2(void) {
   const char *cstr = "name_name_surname_";
   sv actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
@@ -454,6 +454,72 @@ void sv_starts_with_passingEmptrySv(void) {
   bool ret = sv_starts_with(actual, "name_");
   TEST_ASSERT_FALSE(ret);
 }
+
+/* sv_ends_with Tests */
+
+void sv_ends_with_passingString(void) {
+  const char *cstr = "name_surname";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  bool ret = sv_ends_with(actual, "surname");
+  TEST_ASSERT_TRUE(ret);
+}
+
+void sv_ends_with_passingString2(void) {
+  const char *cstr = "name__surname";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  bool ret = sv_ends_with(actual, "surname");
+  TEST_ASSERT_TRUE(ret);
+}
+
+void sv_ends_with_passingString3(void) {
+  const char *cstr = "name_name_surname";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  bool ret = sv_ends_with(actual, "surname");
+  TEST_ASSERT_TRUE(ret);
+}
+
+void sv_ends_with_passingString4(void) {
+  const char *cstr = "_surname";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  bool ret = sv_ends_with(actual, "surname");
+  TEST_ASSERT_TRUE(ret);
+}
+
+void sv_ends_with_passingString5(void) {
+  const char *cstr = "surname";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  bool ret = sv_ends_with(actual, "surname");
+  TEST_ASSERT_TRUE(ret);
+}
+
+void sv_ends_with_passingStringWithUnmatchingSuffix(void) {
+  const char *cstr = "name_name_surnome";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  bool ret = sv_ends_with(actual, "surname");
+  TEST_ASSERT_FALSE(ret);
+}
+
+void sv_ends_with_passingEmptrySv(void) {
+  const char *cstr = "";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  bool ret = sv_ends_with(actual, "surname");
+  TEST_ASSERT_FALSE(ret);
+}
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(sv_from_cstr_passingString);
@@ -493,8 +559,8 @@ int main(void) {
   RUN_TEST(sv_remove_suffix_passingString3);
   RUN_TEST(sv_remove_suffix_passingString4);
   RUN_TEST(sv_remove_suffix_passingString5);
-  RUN_TEST(sv_remove_suffix_passingStringWithUnmatchingPrefix);
-  RUN_TEST(sv_remove_suffix_passingStringWithUnmatchingPrefix2);
+  RUN_TEST(sv_remove_suffix_passingStringWithUnmatchingSuffix);
+  RUN_TEST(sv_remove_suffix_passingStringWithUnmatchingSuffix2);
   RUN_TEST(sv_remove_suffix_passingEmptrySv);
   RUN_TEST(sv_remove_suffixprefix_combined);
   RUN_TEST(sv_starts_with_passingString);
@@ -503,6 +569,13 @@ int main(void) {
   RUN_TEST(sv_starts_with_passingStringWithUnmatchingPrefix);
   RUN_TEST(sv_starts_with_passingStringWithUnmatchingPrefix2);
   RUN_TEST(sv_starts_with_passingEmptrySv);
+  RUN_TEST(sv_ends_with_passingString);
+  RUN_TEST(sv_ends_with_passingString2);
+  RUN_TEST(sv_ends_with_passingString3);
+  RUN_TEST(sv_ends_with_passingString4);
+  RUN_TEST(sv_ends_with_passingString5);
+  RUN_TEST(sv_ends_with_passingStringWithUnmatchingSuffix);
+  RUN_TEST(sv_ends_with_passingEmptrySv);
   UNITY_END();
   return 0;
 }

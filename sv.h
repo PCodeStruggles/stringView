@@ -52,9 +52,11 @@ sv sv_remove_prefix(const sv sv, const char *prefix);
 // original sv
 sv sv_remove_suffix(const sv sv, const char *suffix);
 
-// Returns a sv without the prefix if such prefix is found, otherwise return
-// original sv
+// Returns true if sv starts with prefix, false otherwise
 bool sv_starts_with(const sv sv, const char *prefix);
+
+// Returns true if sv ends with suffix, false otherwise
+bool sv_ends_with(const sv sv, const char *suffix);
 
 #ifdef SV_IMPLEMENTATION
 
@@ -104,6 +106,23 @@ bool sv_starts_with(const sv sv, const char *prefix) {
   while (i < prefix_len && sv.data[i] == prefix[i])
     i++;
   if (i == prefix_len) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool sv_ends_with(const sv sv, const char *suffix) {
+  if (suffix == NULL)
+    SV_PANIC("sv_remove_suffix: suffix argument cannot be NULL");
+  int suffix_len = strlen(suffix);
+  int i = suffix_len - 1;
+  int j = 0;
+  while (i >= 0 && sv.data[(sv.count - 1) - j] == suffix[i]) {
+    i--;
+    j++;
+  }
+  if (i < 0) {
     return true;
   } else {
     return false;
