@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #define SV_FMT "%.*s"
 #define SV_ARG(sv) (int)(sv).count, (sv).data
@@ -17,8 +18,8 @@
   } while (0)
 
 struct string_view {
-  const char *data;
-  size_t count;
+    const char *data;
+    size_t count;
 };
 
 typedef struct string_view sv;
@@ -29,8 +30,7 @@ typedef struct string_view sv;
 sv sv_from_cstr(const char *cstr);
 
 // Returns the char at position pos with boundary check
-#define sv_at(sv, pos)                                                         \
-  (sv).data[assert((pos) >= 0 && (pos) < (sv).count), (pos)]
+#define sv_at(sv, pos) (sv).data[assert((pos) >= 0 && (pos) < (sv).count), (pos)]
 
 // Returns the first char of the string with boundary check
 #define sv_front(sv) (sv).data[assert((sv).count > 0), 0]
@@ -58,67 +58,92 @@ bool sv_starts_with(const sv sv, const char *prefix);
 // Returns true if sv ends with suffix, false otherwise
 bool sv_ends_with(const sv sv, const char *suffix);
 
+// Returns a new sv with leading spaces trimmed
+sv sv_trim_left(const sv sv);
+
 #ifdef SV_IMPLEMENTATION
 
-sv sv_from_cstr(const char *cstr) {
-  if (cstr == NULL)
-    SV_PANIC("sv_from_cstr: cstr argument cannot be NULL");
-  return (sv){.data = cstr, .count = strlen(cstr)};
+sv sv_from_cstr(const char *cstr)
+{
+    if (cstr == NULL) SV_PANIC("sv_from_cstr: cstr argument cannot be NULL");
+    return (sv) {
+        .data = cstr,
+        .count = strlen(cstr)
+    };
 }
 
-sv sv_remove_prefix(const sv sv, const char *prefix) {
-  if (prefix == NULL)
-    SV_PANIC("sv_remove_prefix: prefix argument cannot be NULL");
-  if (sv_starts_with(sv, prefix)) {
+sv sv_remove_prefix(const sv sv, const char *prefix)
+{
+    if (prefix == NULL) SV_PANIC("sv_remove_prefix: prefix argument cannot be NULL");
+    if (sv_starts_with(sv, prefix)) {
+        size_t prefix_len = strlen(prefix);
+        return (struct string_view) {
+            .data = sv.data + prefix_len,
+            .count = sv.count - prefix_len
+        };
+    } else {
+        return sv;
+    }
+}
+
+sv sv_remove_suffix(const sv sv, const char *suffix)
+{
+    if (suffix == NULL) SV_PANIC("sv_remove_suffix: suffix argument cannot be NULL");
+    if (sv_ends_with(sv, suffix)) {
+        size_t suffix_len = strlen(suffix);
+        return (struct string_view) {
+            .data = sv.data,
+            .count = sv.count - suffix_len
+        };
+    } else {
+        return sv;
+    }
+}
+
+bool sv_starts_with(const sv sv, const char *prefix)
+{
+    if (prefix == NULL) SV_PANIC("sv_starts_with: prefix argument cannot be NULL");
     size_t prefix_len = strlen(prefix);
-    return (struct string_view){.data = sv.data + prefix_len,
-                                .count = sv.count - prefix_len};
-  } else {
-    return sv;
-  }
+    size_t i = 0;
+    while (i < prefix_len && sv.data[i] == prefix[i]) i++;
+    if (i == prefix_len) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
-sv sv_remove_suffix(const sv sv, const char *suffix) {
-  if (suffix == NULL)
-    SV_PANIC("sv_remove_suffix: suffix argument cannot be NULL");
-  if (sv_ends_with(sv, suffix)) {
-    size_t suffix_len = strlen(suffix);
-    return (struct string_view){.data = sv.data,
-                                .count = sv.count - suffix_len};
-  } else {
-    return sv;
-  }
+bool sv_ends_with(const sv sv, const char *suffix)
+{
+    if (suffix == NULL) SV_PANIC("sv_remove_suffix: suffix argument cannot be NULL");
+    int suffix_len = strlen(suffix);
+    int i = suffix_len - 1;
+    int j = 0;
+    while (i >= 0 && sv.data[(sv.count - 1) - j] == suffix[i]) {
+        i--;
+        j++;
+    }
+    if (i < 0) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
-bool sv_starts_with(const sv sv, const char *prefix) {
-  if (prefix == NULL)
-    SV_PANIC("sv_starts_with: prefix argument cannot be NULL");
-  size_t prefix_len = strlen(prefix);
-  size_t i = 0;
-  while (i < prefix_len && sv.data[i] == prefix[i])
-    i++;
-  if (i == prefix_len) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-bool sv_ends_with(const sv sv, const char *suffix) {
-  if (suffix == NULL)
-    SV_PANIC("sv_remove_suffix: suffix argument cannot be NULL");
-  int suffix_len = strlen(suffix);
-  int i = suffix_len - 1;
-  int j = 0;
-  while (i >= 0 && sv.data[(sv.count - 1) - j] == suffix[i]) {
-    i--;
-    j++;
-  }
-  if (i < 0) {
-    return true;
-  } else {
-    return false;
-  }
+sv sv_trim_left(const sv sv)
+{
+    if(sv.count <= 0) return (struct string_view) {
+        .data  = "",
+        .count = 0
+    };
+    size_t i = 0;
+    while(isspace(sv.data[i]) && i < sv.count) {
+        i++;
+    }
+    return (struct string_view) {
+        .data  = sv.data  + i,
+        .count = sv.count - i
+    };
 }
 
 #endif // SV_IMPLEMENTATION
