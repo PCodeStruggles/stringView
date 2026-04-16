@@ -61,6 +61,9 @@ bool sv_ends_with(const sv sv, const char *suffix);
 // Returns a new sv with leading spaces trimmed
 sv sv_trim_left(const sv sv);
 
+// Returns a new sv with trailing spaces trimmed
+sv sv_trim_right(const sv sv);
+
 #ifdef SV_IMPLEMENTATION
 
 sv sv_from_cstr(const char *cstr)
@@ -142,6 +145,23 @@ sv sv_trim_left(const sv sv)
     }
     return (struct string_view) {
         .data  = sv.data  + i,
+        .count = sv.count - i
+    };
+}
+
+sv sv_trim_right(const sv sv)
+{
+    if(sv.count <= 0) return (struct string_view) {
+        .data  = "",
+        .count = 0
+    };
+    size_t i = 0;
+    while(isspace(sv.data[(sv.count - 1) - i]) &&
+            ((sv.count - 1) - i) >= 0) {
+        i++;
+    }
+    return (struct string_view) {
+        .data  = sv.data,
         .count = sv.count - i
     };
 }

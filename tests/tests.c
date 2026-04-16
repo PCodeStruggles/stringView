@@ -540,6 +540,26 @@ void sv_trim_left_passingStringWithNoLeadingSpaces(void) {
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
 }
 
+/* sv_trim_right tests */
+
+void sv_trim_right_passingString(void) {
+  const char *cstr = "name_surname   ";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_right(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_right_passingStringWithNoLeadingSpaces(void) {
+  const char *cstr = "name_surname";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_right(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
+}
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(sv_from_cstr_passingString);
@@ -598,6 +618,8 @@ int main(void) {
   RUN_TEST(sv_ends_with_passingEmptrySv);
   RUN_TEST(sv_trim_left_passingString);
   RUN_TEST(sv_trim_left_passingStringWithNoLeadingSpaces);
+  RUN_TEST(sv_trim_right_passingString);
+  RUN_TEST(sv_trim_right_passingStringWithNoLeadingSpaces);
   UNITY_END();
   return 0;
 }
