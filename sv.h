@@ -64,6 +64,9 @@ sv sv_trim_left(const sv sv);
 // Returns a new sv with trailing spaces trimmed
 sv sv_trim_right(const sv sv);
 
+// Return a new sv with both leading and trailing spaces trimmed
+sv sv_trim(const sv sv);
+
 #ifdef SV_IMPLEMENTATION
 
 sv sv_from_cstr(const char *cstr)
@@ -164,6 +167,15 @@ sv sv_trim_right(const sv sv)
         .data  = sv.data,
         .count = sv.count - i
     };
+}
+
+sv sv_trim(const sv sv)
+{
+    if(sv.count <= 0 ) return (struct string_view) {
+        .data = "",
+        .count = 0
+    };
+    return sv_trim_right(sv_trim_left(sv));
 }
 
 #endif // SV_IMPLEMENTATION

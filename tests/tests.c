@@ -531,6 +531,71 @@ void sv_trim_left_passingString(void) {
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
 }
 
+
+void sv_trim_left_passingString2(void) {
+  const char *cstr = "\tname_surname";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_left(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_left_passingString3(void) {
+  const char *cstr = "\nname_surname";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_left(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_left_passingString4(void) {
+  const char *cstr =
+      "             The quick brown fox jumps over the lazy dog. ";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_left(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("The quick brown fox jumps over the lazy dog. ", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_left_passingEmptySv(void) {
+  const char *cstr = "";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_left(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_left_passingSvMadeOfSpaces(void) {
+  const char *cstr = "    ";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_left(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_left_passingSvMadeOfSpaces2(void) {
+  const char *cstr = "\n    ";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_left(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_left_passingSvMadeOfSpaces3(void) {
+  const char *cstr = "\t    ";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_left(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);  
+}
+
 void sv_trim_left_passingStringWithNoLeadingSpaces(void) {
   const char *cstr = "name_surname";
   sv actual = sv_from_cstr(cstr);
@@ -551,6 +616,24 @@ void sv_trim_right_passingString(void) {
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
 }
 
+void sv_trim_right_passingString2(void) {
+  const char *cstr = "name_surname\t";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_right(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_right_passingString3(void) {
+  const char *cstr = "name_surname\n";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_right(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
+}
+
 void sv_trim_right_passingStringWithNoLeadingSpaces(void) {
   const char *cstr = "name_surname";
   sv actual = sv_from_cstr(cstr);
@@ -558,6 +641,108 @@ void sv_trim_right_passingStringWithNoLeadingSpaces(void) {
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   sv trimmed = sv_trim_right(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_right_passingEmptySv(void) {
+  const char *cstr = "";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_right(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_right_passingSvMadeOfSpaces(void) {
+  const char *cstr = "    ";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_right(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_right_passingSvMadeOfSpaces2(void) {
+  const char *cstr = "    \t";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_right(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
+}
+
+void sv_trim_right_passingSvMadeOfSpaces3(void) {
+  const char *cstr = "    \n";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim_right(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);  
+}
+
+/* sv_trim tests */
+
+void sv_trim_passingSv(void) {
+  const char *cstr = "    name_surname     ";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_passingSv2(void) {
+  const char *cstr = "\nname_surname     ";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_passingSv3(void) {
+  const char *cstr = "\tname_surname\n";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);  
+}
+
+
+void sv_trim_passingEmptySV(void) {
+  const char *cstr = "";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_passingSvMadeOfSpaces(void) {
+  const char *cstr = "    ";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_passingSvMadeOfSpaces2(void) {
+  const char *cstr = "\n    ";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);  
+}
+
+void sv_trim_passingSvMadeOfSpaces3(void) {
+  const char *cstr = "\n\t";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);  
 }
 
 int main(void) {
@@ -618,8 +803,28 @@ int main(void) {
   RUN_TEST(sv_ends_with_passingEmptrySv);
   RUN_TEST(sv_trim_left_passingString);
   RUN_TEST(sv_trim_left_passingStringWithNoLeadingSpaces);
+  RUN_TEST(sv_trim_left_passingString2);
+  RUN_TEST(sv_trim_left_passingString3);
+  RUN_TEST(sv_trim_left_passingString4);
+  RUN_TEST(sv_trim_left_passingEmptySv);
+  RUN_TEST(sv_trim_left_passingSvMadeOfSpaces);
+  RUN_TEST(sv_trim_left_passingSvMadeOfSpaces2);
+  RUN_TEST(sv_trim_left_passingSvMadeOfSpaces3);
   RUN_TEST(sv_trim_right_passingString);
+  RUN_TEST(sv_trim_right_passingString2);
+  RUN_TEST(sv_trim_right_passingString3);
   RUN_TEST(sv_trim_right_passingStringWithNoLeadingSpaces);
+  RUN_TEST(sv_trim_right_passingEmptySv);
+  RUN_TEST(sv_trim_right_passingSvMadeOfSpaces);
+  RUN_TEST(sv_trim_right_passingSvMadeOfSpaces2);
+  RUN_TEST(sv_trim_right_passingSvMadeOfSpaces3);
+  RUN_TEST(sv_trim_passingSv);
+  RUN_TEST(sv_trim_passingSv2);
+  RUN_TEST(sv_trim_passingSv3);
+  RUN_TEST(sv_trim_passingEmptySV);
+  RUN_TEST(sv_trim_passingSvMadeOfSpaces);
+  RUN_TEST(sv_trim_passingSvMadeOfSpaces2);
+  RUN_TEST(sv_trim_passingSvMadeOfSpaces3);
   UNITY_END();
   return 0;
 }
