@@ -160,7 +160,7 @@ sv sv_trim_right(const sv sv)
     };
     size_t i = 0;
     while(isspace(sv.data[(sv.count - 1) - i]) &&
-            ((sv.count - 1) - i) >= 0) {
+             ((sv.count - 1) - i) >= 0) {
         i++;
     }
     return (struct string_view) {
