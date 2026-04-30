@@ -17,12 +17,10 @@
     abort();                                                                   \
   } while (0)
 
-struct string_view {
+typedef struct string_view {
     const char *data;
-    size_t count;
-};
-
-typedef struct string_view sv;
+    size_t     count;
+} sv;
 
 // DECLARATION
 
@@ -44,6 +42,9 @@ sv sv_from_cstr(const char *cstr);
 // Returns whether the string is empty or not
 #define sv_empty(sv) ((sv).count == 0)
 
+// Return whether sv1 and sv2 are equal
+bool sv_equal(const sv sv1, const sv sv2);
+
 // Returns a sv without the prefix if such prefix is found, otherwise return
 // original sv
 sv sv_remove_prefix(const sv sv, const char *prefix);
@@ -58,6 +59,9 @@ bool sv_starts_with(const sv sv, const char *prefix);
 // Returns true if sv ends with suffix, false otherwise
 bool sv_ends_with(const sv sv, const char *suffix);
 
+// Retursn true if sv contains cstr, false otherwise
+bool sv_contains(const sv sv, const char* cstr);
+
 // Returns a new sv with leading spaces trimmed
 sv sv_trim_left(const sv sv);
 
@@ -66,6 +70,11 @@ sv sv_trim_right(const sv sv);
 
 // Return a new sv with both leading and trailing spaces trimmed
 sv sv_trim(const sv sv);
+
+// Return the content of the sv passed as argument up to the first space.
+// Increment the count of the sv passed as argument in order to point to 
+// the next token.
+sv sv_split_by_space(sv* sv);
 
 #ifdef SV_IMPLEMENTATION
 
@@ -78,13 +87,22 @@ sv sv_from_cstr(const char *cstr)
     };
 }
 
+bool sv_equal(const sv sv1, const sv sv2)
+{
+    if(sv1.count != sv2.count) return false;
+    for(size_t i = 0; i < sv1.count; i++) {
+        if(sv1.data[i] != sv2.data[i]) return false;
+    }
+    return true;
+}
+
 sv sv_remove_prefix(const sv sv, const char *prefix)
 {
     if (prefix == NULL) SV_PANIC("sv_remove_prefix: prefix argument cannot be NULL");
     if (sv_starts_with(sv, prefix)) {
         size_t prefix_len = strlen(prefix);
         return (struct string_view) {
-            .data = sv.data + prefix_len,
+            .data  = sv.data + prefix_len,
             .count = sv.count - prefix_len
         };
     } else {
@@ -98,12 +116,25 @@ sv sv_remove_suffix(const sv sv, const char *suffix)
     if (sv_ends_with(sv, suffix)) {
         size_t suffix_len = strlen(suffix);
         return (struct string_view) {
-            .data = sv.data,
+            .data  = sv.data,
             .count = sv.count - suffix_len
         };
     } else {
         return sv;
     }
+}
+
+bool sv_contains(const sv sv, const char* cstr)
+{
+    if(cstr == NULL || strlen(cstr) > sv.count) return false;
+    size_t i = 0;
+    while(i < sv.count) {
+        for (size_t k = i, j = 0; sv.data[k] == cstr[j]; k++, j++) {
+            if(j == (strlen(cstr) - 1)) return true;
+        }
+        i++;
+    }
+    return false;
 }
 
 bool sv_starts_with(const sv sv, const char *prefix)
@@ -160,7 +191,7 @@ sv sv_trim_right(const sv sv)
     };
     size_t i = 0;
     while(isspace(sv.data[(sv.count - 1) - i]) &&
-             ((sv.count - 1) - i) >= 0) {
+            ((sv.count - 1) - i) >= 0) {
         i++;
     }
     return (struct string_view) {
@@ -176,6 +207,29 @@ sv sv_trim(const sv sv)
         .count = 0
     };
     return sv_trim_right(sv_trim_left(sv));
+}
+
+sv sv_split_by_space(sv* string_view)
+{
+    if(string_view == NULL || string_view->count <= 0) {
+        return sv_from_cstr("");
+    }
+
+    for(; string_view->count > 0 && isspace(string_view->data[0]); 
+            string_view->data += 1, 
+            string_view->count -= 1) ;
+
+    size_t i = 0;
+    while(i < string_view->count && !isspace(string_view->data[i])) {
+        i++;
+    }
+
+    sv ret = { .data = string_view->data, .count = i };
+
+    string_view->data  = string_view->data  + i;
+    string_view->count = string_view->count - i;
+
+    return ret;
 }
 
 #endif // SV_IMPLEMENTATION
