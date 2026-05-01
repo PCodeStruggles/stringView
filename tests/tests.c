@@ -1063,6 +1063,87 @@ void sv_split_by_delim_case1(void)
     TEST_ASSERT_EQUAL_STRING_LEN("dog.", token.data, token.count);
 }
 
+void sv_split_by_delim_case2(void)
+{
+    const char *cstr =
+        "The,quick,brown,fox,jumps,over,the,lazy,dog";
+    sv string_view = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
+    sv token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("The", token.data, token.count);
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("quick", token.data, token.count);
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("brown", token.data, token.count);
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("fox", token.data, token.count);
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("jumps", token.data, token.count);
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("over", token.data, token.count);
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("the", token.data, token.count);
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("lazy", token.data, token.count);
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("dog.", token.data, token.count);
+}
+
+void sv_split_by_delim_case3(void)
+{
+    const char *cstr =
+        "The/quick/brown/fox/jumps/over/the/lazy/dog";
+    sv string_view = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
+    sv token = sv_split_by_delim(&string_view, '/');
+    TEST_ASSERT_EQUAL_STRING_LEN("The", token.data, token.count);
+    token = sv_split_by_delim(&string_view, '/');
+    TEST_ASSERT_EQUAL_STRING_LEN("quick", token.data, token.count);
+    token = sv_split_by_delim(&string_view, '/');
+    TEST_ASSERT_EQUAL_STRING_LEN("brown", token.data, token.count);
+    token = sv_split_by_delim(&string_view, '/');
+    TEST_ASSERT_EQUAL_STRING_LEN("fox", token.data, token.count);
+    token = sv_split_by_delim(&string_view, '/');
+    TEST_ASSERT_EQUAL_STRING_LEN("jumps", token.data, token.count);
+    token = sv_split_by_delim(&string_view, '/');
+    TEST_ASSERT_EQUAL_STRING_LEN("over", token.data, token.count);
+    token = sv_split_by_delim(&string_view, '/');
+    TEST_ASSERT_EQUAL_STRING_LEN("the", token.data, token.count);
+    token = sv_split_by_delim(&string_view, '/');
+    TEST_ASSERT_EQUAL_STRING_LEN("lazy", token.data, token.count);
+    token = sv_split_by_delim(&string_view, '/');
+    TEST_ASSERT_EQUAL_STRING_LEN("dog.", token.data, token.count);
+}
+
+void sv_split_by_delim_passingNULLPointer(void)
+{
+    sv token = sv_split_by_delim(NULL, '/');
+    TEST_ASSERT_EQUAL_STRING_LEN("", token.data, token.count);
+}
+
+void sv_split_by_delim_passingEmptySv(void)
+{
+    sv string_view = sv_from_cstr("");
+    sv token = sv_split_by_delim(NULL, '/');
+    TEST_ASSERT_EQUAL_STRING_LEN("", token.data, token.count);
+}
+
+void sv_split_by_delim_delimNotInString(void)
+{
+    const char *cstr =
+        "The quick brown fox jumps over the lazy dog.";
+    sv string_view = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
+    sv token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN(
+            "The quick brown fox jumps over the lazy dog.", 
+            token.data, 
+            token.count);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -1162,6 +1243,11 @@ int main(void)
     RUN_TEST(sv_split_by_space_case3);
     RUN_TEST(sv_split_by_space_passingNULL);
     RUN_TEST(sv_split_by_delim_case1);
+    RUN_TEST(sv_split_by_delim_case2);
+    RUN_TEST(sv_split_by_delim_case3);
+    RUN_TEST(sv_split_by_delim_passingNULLPointer);
+    RUN_TEST(sv_split_by_delim_passingEmptySv);
+    RUN_TEST(sv_split_by_delim_delimNotInString);
     UNITY_END();
     return 0;
 }

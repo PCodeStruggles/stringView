@@ -22,8 +22,6 @@ typedef struct string_view {
     size_t     count;
 } sv;
 
-// DECLARATION
-
 // Create a sv from cstr and returns it
 sv sv_from_cstr(const char *cstr);
 
