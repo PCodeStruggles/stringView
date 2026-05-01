@@ -71,10 +71,15 @@ sv sv_trim_right(const sv sv);
 // Return a new sv with both leading and trailing spaces trimmed
 sv sv_trim(const sv sv);
 
-// Return the content of the sv passed as argument up to the first space.
-// Increment the count of the sv passed as argument in order to point to 
+// Return the content of the sv passed as argument up to the delimeter passed as argument.
+// Increment the count of the sv passed as argument in order to point to
 // the next token.
-sv sv_split_by_space(sv* sv);
+sv sv_split_by_delim(sv* string_view, const char c);
+
+// Return the content of the sv passed as argument up to the first space.
+// Increment the count of the sv passed as argument in order to point to
+// the next token.
+sv sv_split_by_space(sv* string_view);
 
 #ifdef SV_IMPLEMENTATION
 
@@ -102,7 +107,7 @@ sv sv_remove_prefix(const sv sv, const char *prefix)
     if (sv_starts_with(sv, prefix)) {
         size_t prefix_len = strlen(prefix);
         return (struct string_view) {
-            .data  = sv.data + prefix_len,
+            .data  = sv.data  + prefix_len,
             .count = sv.count - prefix_len
         };
     } else {
@@ -127,10 +132,13 @@ sv sv_remove_suffix(const sv sv, const char *suffix)
 bool sv_contains(const sv sv, const char* cstr)
 {
     if(cstr == NULL || strlen(cstr) > sv.count) return false;
+    size_t cstr_len = strlen(cstr);
     size_t i = 0;
     while(i < sv.count) {
-        for (size_t k = i, j = 0; sv.data[k] == cstr[j]; k++, j++) {
-            if(j == (strlen(cstr) - 1)) return true;
+        for (size_t k = i, j = 0;
+                j < cstr_len && sv.data[k] == cstr[j];
+                k++, j++) {
+            if(j == (cstr_len - 1)) return true;
         }
         i++;
     }
@@ -209,20 +217,19 @@ sv sv_trim(const sv sv)
     return sv_trim_right(sv_trim_left(sv));
 }
 
-sv sv_split_by_space(sv* string_view)
+sv sv_split_by_delim(sv* string_view, const char c)
 {
     if(string_view == NULL || string_view->count <= 0) {
         return sv_from_cstr("");
     }
 
-    for(; string_view->count > 0 && isspace(string_view->data[0]); 
-            string_view->data += 1, 
-            string_view->count -= 1) ;
+    for(; string_view->count > 0 && isspace(string_view->data[0]);
+            string_view->data  += 1,
+            string_view->count -= 1)
+        ;
 
     size_t i = 0;
-    while(i < string_view->count && !isspace(string_view->data[i])) {
-        i++;
-    }
+    while(i < string_view->count && string_view->data[i] != c) i++;
 
     sv ret = { .data = string_view->data, .count = i };
 
@@ -230,6 +237,15 @@ sv sv_split_by_space(sv* string_view)
     string_view->count = string_view->count - i;
 
     return ret;
+}
+
+sv sv_split_by_space(sv* string_view)
+{
+    if(string_view == NULL || string_view->count <= 0) {
+        return sv_from_cstr("");
+    } else {
+        return sv_split_by_delim(string_view, ' ');
+    }
 }
 
 #endif // SV_IMPLEMENTATION
