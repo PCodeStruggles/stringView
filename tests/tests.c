@@ -130,6 +130,14 @@ void sv_equal_cstr_passingEmptyStringInBothSvAndCstr(void) {
       ret, "bool ret = sv_equal_cstr(sv1, cstr) should return true");
 }
 
+void sv_equal_cstr_passingSameEscapeSequence(void) {
+  const char *cstr = "\t";
+  sv sv1 = sv_from_cstr(cstr);
+  bool ret = sv_equal_cstr(sv1, cstr);
+  TEST_ASSERT_TRUE_MESSAGE(
+      ret, "bool ret = sv_equal_cstr(sv1, cstr) should return true");
+}
+
 /* sv_at Tests */
 
 void sv_at_passingString(void) {
@@ -1053,7 +1061,7 @@ void sv_split_by_delim_passingNULLPointer(void) {
 
 void sv_split_by_delim_passingEmptySv(void) {
   sv string_view = sv_from_cstr("");
-  sv token = sv_split_by_delim(NULL, '/');
+  sv token = sv_split_by_delim(&string_view, '/');
   TEST_ASSERT_EQUAL_STRING_LEN("", token.data, token.count);
 }
 
@@ -1083,6 +1091,7 @@ int main(void) {
   RUN_TEST(sv_equal_cstr_passingDifferentString);
   RUN_TEST(sv_equal_cstr_passingNULLAsCstr);
   RUN_TEST(sv_equal_cstr_passingEmptyStringInBothSvAndCstr);
+  RUN_TEST(sv_equal_cstr_passingSameEscapeSequence);
   RUN_TEST(sv_at_passingString);
   RUN_TEST(sv_at_passingString2);
   RUN_TEST(sv_at_passingLongString1);
