@@ -53,8 +53,7 @@ void sv_equal_passingIdenticalSvs(void) {
   sv sv1 = sv_from_cstr(cstr);
   sv sv2 = sv_from_cstr(cstr);
   bool ret = sv_equal(sv1, sv2);
-  TEST_ASSERT_TRUE_MESSAGE(ret,
-                           "bool ret = sv_equal(sv1, sv2) should return true");
+  TEST_ASSERT_TRUE_MESSAGE(ret, "bool ret = sv_equal(sv1, sv2) should return true");
 }
 
 void sv_equal_passingDifferentSvs(void) {
@@ -63,9 +62,7 @@ void sv_equal_passingDifferentSvs(void) {
   sv sv1 = sv_from_cstr(cstr1);
   sv sv2 = sv_from_cstr(cstr2);
   bool ret = sv_equal(sv1, sv2);
-  TEST_ASSERT_FALSE_MESSAGE(
-      ret, "bool ret = sv_equal(sv1, sv2) should return false");
-}
+  TEST_ASSERT_FALSE_MESSAGE(ret, "bool ret = sv_equal(sv1, sv2) should return false"); }
 
 void sv_equal_passingDifferentSvsInSize(void) {
   const char *cstr1 = "Hello World!";
@@ -73,8 +70,7 @@ void sv_equal_passingDifferentSvsInSize(void) {
   sv sv1 = sv_from_cstr(cstr1);
   sv sv2 = sv_from_cstr(cstr2);
   bool ret = sv_equal(sv1, sv2);
-  TEST_ASSERT_FALSE_MESSAGE(
-      ret, "bool ret = sv_equal(sv1, sv2) should return false");
+  TEST_ASSERT_FALSE_MESSAGE(ret, "bool ret = sv_equal(sv1, sv2) should return false");
 }
 
 void sv_equal_passingOneEmptySV(void) {
@@ -83,8 +79,7 @@ void sv_equal_passingOneEmptySV(void) {
   sv sv1 = sv_from_cstr(cstr1);
   sv sv2 = sv_from_cstr(cstr2);
   bool ret = sv_equal(sv1, sv2);
-  TEST_ASSERT_FALSE_MESSAGE(
-      ret, "bool ret = sv_equal(sv1, sv2) should return false");
+  TEST_ASSERT_FALSE_MESSAGE(ret, "bool ret = sv_equal(sv1, sv2) should return false");
 }
 
 void sv_equal_passingTwoEmptySvs(void) {
@@ -93,8 +88,7 @@ void sv_equal_passingTwoEmptySvs(void) {
   sv sv1 = sv_from_cstr(cstr1);
   sv sv2 = sv_from_cstr(cstr2);
   bool ret = sv_equal(sv1, sv2);
-  TEST_ASSERT_TRUE_MESSAGE(ret,
-                           "bool ret = sv_equal(sv1, sv2) should return true");
+  TEST_ASSERT_TRUE_MESSAGE(ret, "bool ret = sv_equal(sv1, sv2) should return true");
 }
 
 /* sv_equal_cstr test */
@@ -103,39 +97,34 @@ void sv_equal_cstr_passingSameString(void) {
   const char *cstr = "Hello World!";
   sv sv1 = sv_from_cstr(cstr);
   bool ret = sv_equal_cstr(sv1, cstr);
-  TEST_ASSERT_TRUE_MESSAGE(
-      ret, "bool ret = sv_equal_cstr(sv1, cstr) should return true");
+  TEST_ASSERT_TRUE_MESSAGE(ret, "bool ret = sv_equal_cstr(sv1, cstr) should return true");
 }
 
 void sv_equal_cstr_passingDifferentString(void) {
   const char *cstr = "Hello World!";
   sv sv1 = sv_from_cstr("Hello Mundo!");
   bool ret = sv_equal_cstr(sv1, cstr);
-  TEST_ASSERT_FALSE_MESSAGE(
-      ret, "bool ret = sv_equal_cstr(sv1, cstr) should return false");
+  TEST_ASSERT_FALSE_MESSAGE(ret, "bool ret = sv_equal_cstr(sv1, cstr) should return false");
 }
 
 void sv_equal_cstr_passingNULLAsCstr(void) {
   sv sv1 = sv_from_cstr("Hello World!");
   bool ret = sv_equal_cstr(sv1, NULL);
-  TEST_ASSERT_FALSE_MESSAGE(
-      ret, "bool ret = sv_equal_cstr(sv1, NULL) should return false");
+  TEST_ASSERT_FALSE_MESSAGE(ret, "bool ret = sv_equal_cstr(sv1, NULL) should return false");
 }
 
 void sv_equal_cstr_passingEmptyStringInBothSvAndCstr(void) {
   const char *cstr = "";
   sv sv1 = sv_from_cstr(cstr);
   bool ret = sv_equal_cstr(sv1, cstr);
-  TEST_ASSERT_TRUE_MESSAGE(
-      ret, "bool ret = sv_equal_cstr(sv1, cstr) should return true");
+  TEST_ASSERT_TRUE_MESSAGE(ret, "bool ret = sv_equal_cstr(sv1, cstr) should return true");
 }
 
 void sv_equal_cstr_passingSameEscapeSequence(void) {
   const char *cstr = "\t";
   sv sv1 = sv_from_cstr(cstr);
   bool ret = sv_equal_cstr(sv1, cstr);
-  TEST_ASSERT_TRUE_MESSAGE(
-      ret, "bool ret = sv_equal_cstr(sv1, cstr) should return true");
+  TEST_ASSERT_TRUE_MESSAGE(ret, "bool ret = sv_equal_cstr(sv1, cstr) should return true");
 }
 
 /* sv_at Tests */
@@ -177,8 +166,6 @@ void sv_at_passingLongString2(void) {
 }
 
 /* sv_front Tests */
-// TODO: Add tests to verify correct behaviour
-// when we shift forward the data pointer
 
 void sv_front_passingString(void) {
   const char *cstr = "name";
@@ -910,6 +897,15 @@ void sv_trim_passingSvMadeOfSpaces3(void) {
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
+void sv_trim_passingNULLTerminatedStringSv(void) {
+  const char *cstr = "\0";
+  sv actual = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
+  sv trimmed = sv_trim(actual);
+  TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
+}
+
 /* sv_split_by_space tests */
 
 void sv_split_by_space_case1(void) {
@@ -1065,6 +1061,12 @@ void sv_split_by_delim_passingEmptySv(void) {
   TEST_ASSERT_EQUAL_STRING_LEN("", token.data, token.count);
 }
 
+void sv_split_by_delim_passingEmptyNULLTerminatedStringSv(void) {
+  sv string_view = sv_from_cstr("\0");
+  sv token = sv_split_by_delim(&string_view, '/');
+  TEST_ASSERT_EQUAL_STRING_LEN("", token.data, token.count);
+}
+
 void sv_split_by_delim_delimNotInString(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
   sv string_view = sv_from_cstr(cstr);
@@ -1173,6 +1175,7 @@ int main(void) {
   RUN_TEST(sv_trim_passingSvMadeOfSpaces);
   RUN_TEST(sv_trim_passingSvMadeOfSpaces2);
   RUN_TEST(sv_trim_passingSvMadeOfSpaces3);
+  RUN_TEST(sv_trim_passingNULLTerminatedStringSv);
   RUN_TEST(sv_split_by_space_case1);
   RUN_TEST(sv_split_by_space_case2);
   RUN_TEST(sv_split_by_space_case3);
@@ -1182,6 +1185,7 @@ int main(void) {
   RUN_TEST(sv_split_by_delim_case3);
   RUN_TEST(sv_split_by_delim_passingNULLPointer);
   RUN_TEST(sv_split_by_delim_passingEmptySv);
+  RUN_TEST(sv_split_by_delim_passingEmptyNULLTerminatedStringSv);
   RUN_TEST(sv_split_by_delim_delimNotInString);
   UNITY_END();
   return 0;
