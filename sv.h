@@ -90,7 +90,7 @@ bool sv_equal_cstr(const sv string_view, const char *cstr);
 sv sv_remove_prefix(const sv sv, const char *prefix);
 
 /**
- * @brief if the string view data ends with suffix, reduce the sv.count 
+ * @brief if the string view data ends with suffix, reduce the sv.count
  * effectively "removing" the suffix.
  * @param sv string view to be used
  * @prefix cstr to be stripped from sv.data
@@ -100,7 +100,7 @@ sv sv_remove_prefix(const sv sv, const char *prefix);
 */
 sv sv_remove_suffix(const sv sv, const char *suffix);
 
-/** 
+/**
  * @brief check whethere the sv.data starts with prefix
  * @param sv string view to be used
  * @param prefix cstr
@@ -234,8 +234,8 @@ bool sv_contains(const sv sv, const char *cstr)
     size_t cstr_len = strlen(cstr);
     size_t i = 0;
     while (i < sv.count) {
-        for (size_t k = i, j = 0; 
-            j < cstr_len && sv.data[k] == cstr[j]; 
+        for (size_t k = i, j = 0;
+            j < cstr_len && sv.data[k] == cstr[j];
             k++, j++) {
             if (j == (cstr_len - 1)) return true;
         }
@@ -285,7 +285,7 @@ sv sv_trim_left(const sv sv)
         i++;
     }
     return (struct string_view) {
-        .data = sv.data   + i, 
+        .data = sv.data   + i,
         .count = sv.count - i
     };
 }
@@ -294,7 +294,7 @@ sv sv_trim_right(const sv sv)
 {
     if (sv.count <= 0)
         return (struct string_view) {
-        .data = "", 
+        .data = "",
         .count = 0
     };
     size_t i = 0;
@@ -302,7 +302,7 @@ sv sv_trim_right(const sv sv)
         i++;
     }
     return (struct string_view) {
-        .data  = sv.data, 
+        .data  = sv.data,
         .count = sv.count - i
     };
 }
@@ -311,7 +311,7 @@ sv sv_trim(const sv sv)
 {
     if (sv.count <= 0)
         return (struct string_view) {
-        .data = "", 
+        .data = "",
         .count = 0
     };
     return sv_trim_right(sv_trim_left(sv));
@@ -323,9 +323,9 @@ sv sv_split_by_delim(sv *string_view, const char c)
         return sv_from_cstr("");
     }
 
-    for (; 
+    for (;
         string_view->count > 0 && isspace(string_view->data[0]);
-        string_view->data  += 1, 
+        string_view->data  += 1,
         string_view->count -= 1)
         ;
 
@@ -333,7 +333,7 @@ sv sv_split_by_delim(sv *string_view, const char c)
     while (i < string_view->count && string_view->data[i] != c) i++;
 
     sv ret = {
-      .data  = string_view->data, 
+      .data  = string_view->data,
       .count = i
     };
 
