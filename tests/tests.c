@@ -1077,6 +1077,62 @@ void sv_split_by_delim_delimNotInString(void) {
                                token.data, token.count);
 }
 
+/* sv_skip_n_chars tests */
+
+void sv_skip_n_chars_normalCase(void) {
+  const char *cstr = "The quick brown fox jumps over the lazy dog.";
+  sv string_view = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
+  sv token = sv_skip_n_chars(string_view, 3);
+  TEST_ASSERT_EQUAL_STRING_LEN(" quick brown fox jumps over the lazy dog.",
+                               token.data, token.count);
+}
+
+void sv_skip_n_chars_skippingEntireString(void) {
+  const char *cstr = "The quick brown fox jumps over the lazy dog.";
+  sv string_view = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
+  sv token = sv_skip_n_chars(string_view, string_view.count);
+  TEST_ASSERT_EQUAL_STRING_LEN("",
+                               token.data, 
+                               token.count);
+}
+
+void sv_skip_n_chars_skippingUpToLastChar(void) {
+  const char *cstr = "The quick brown fox jumps over the lazy dog.";
+  sv string_view = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
+  sv token = sv_skip_n_chars(string_view, string_view.count - 1);
+  TEST_ASSERT_EQUAL_STRING_LEN(".",
+                               token.data, 
+                               token.count);
+}
+
+void sv_skip_n_chars_passingEmptySV(void) {
+  const char *cstr = "";
+  sv string_view = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
+  sv token = sv_skip_n_chars(string_view, 0);
+  TEST_ASSERT_EQUAL_STRING_LEN("",
+                               token.data, token.count);
+}
+
+void sv_skip_n_chars_passingNGreaterThanSvCount(void) {
+  const char *cstr = "The quick brown fox jumps over the lazy dog.";
+  sv string_view = sv_from_cstr(cstr);
+  TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
+  TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
+  sv token = sv_skip_n_chars(string_view, string_view.count + 10);
+  TEST_ASSERT_EQUAL_STRING_LEN(".",
+                               token.data, 
+                               token.count);
+}
+
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(sv_from_cstr_passingString);
@@ -1187,6 +1243,11 @@ int main(void) {
   RUN_TEST(sv_split_by_delim_passingEmptySv);
   RUN_TEST(sv_split_by_delim_passingEmptyNULLTerminatedStringSv);
   RUN_TEST(sv_split_by_delim_delimNotInString);
+  RUN_TEST(sv_skip_n_chars_normalCase);
+  RUN_TEST(sv_skip_n_chars_skippingEntireString);
+  RUN_TEST(sv_skip_n_chars_skippingUpToLastChar);
+  RUN_TEST(sv_skip_n_chars_passingEmptySV);
+  RUN_TEST(sv_skip_n_chars_passingNGreaterThanSvCount);
   UNITY_END();
   return 0;
 }

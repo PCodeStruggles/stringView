@@ -13,7 +13,7 @@
 
 #define SV_PANIC(msg)                                                          \
   do {                                                                         \
-    fprintf(stderr, "PANIC: %s\n", (msg));                                     \
+    fprintf(stderr, "PANIC %s:%d : %s\n", __FILE__, __LINE__, (msg));          \
     abort();                                                                   \
   } while (0)
 
@@ -167,6 +167,15 @@ sv sv_split_by_delim(sv *string_view, const char c);
  * If no space is found, the string view pointed to by the pointer passed as argument.
 */
 sv sv_split_by_space(sv *string_view);
+
+/**
+ * @brief skip the first n chars in the string.
+ * @param string_view to be used as source.
+ * @param n number of chars to be skipped.
+ * @return return a string view with the data pointer advanced by n chars.
+ * if n is greater than string_view.count, return empty sv.
+*/
+sv sv_skip_n_chars(sv string_view, size_t n);
 
 #ifdef SV_IMPLEMENTATION
 
@@ -350,6 +359,21 @@ sv sv_split_by_space(sv *string_view)
     } else {
         return sv_split_by_delim(string_view, ' ');
     }
+}
+
+sv sv_skip_n_chars(sv string_view, size_t n)
+{
+  if(string_view.count <= 0 || n >= string_view.count) {
+    return (struct string_view) {
+      .data  = "",
+      .count = 0,
+    };
+  } else {
+    return (struct string_view) {
+      .data  = string_view.data  + n,
+      .count = string_view.count - n,
+    };
+  }
 }
 
 #endif // SV_IMPLEMENTATION
