@@ -124,7 +124,6 @@ bool sv_ends_with(const sv sv, const char *suffix);
 */
 bool sv_contains(const sv sv, const char *cstr);
 
-
 /**
  * @brief strip any leading space chars by increasing the sv.data pointer accordingly.
  * @param sv string view to be used
@@ -199,8 +198,12 @@ bool sv_equal(const sv sv1, const sv sv2)
 
 bool sv_equal_cstr(const sv string_view, const char *cstr)
 {
-    if (cstr == NULL) { return false; }
-    if (strlen(cstr) != string_view.count) { return false; }
+    if (cstr == NULL) {
+        return false;
+    }
+    if (strlen(cstr) != string_view.count) {
+        return false;
+    }
     for (size_t i = 0; i < string_view.count; i++) {
         if (cstr[i] != string_view.data[i]) {
             return false;
@@ -244,8 +247,8 @@ bool sv_contains(const sv sv, const char *cstr)
     size_t i = 0;
     while (i < sv.count) {
         for (size_t k = i, j = 0;
-            j < cstr_len && sv.data[k] == cstr[j];
-            k++, j++) {
+                j < cstr_len && sv.data[k] == cstr[j];
+                k++, j++) {
             if (j == (cstr_len - 1)) return true;
         }
         i++;
@@ -333,17 +336,17 @@ sv sv_split_by_delim(sv *string_view, const char c)
     }
 
     for (;
-        string_view->count > 0 && isspace(string_view->data[0]);
-        string_view->data  += 1,
-        string_view->count -= 1)
+            string_view->count > 0 && isspace(string_view->data[0]);
+            string_view->data  += 1,
+            string_view->count -= 1)
         ;
 
     size_t i = 0;
     while (i < string_view->count && string_view->data[i] != c) i++;
 
     sv ret = {
-      .data  = string_view->data,
-      .count = i
+        .data  = string_view->data,
+        .count = i
     };
 
     string_view->data  = string_view->data  + i;
@@ -363,17 +366,17 @@ sv sv_split_by_space(sv *string_view)
 
 sv sv_skip_n_chars(sv string_view, size_t n)
 {
-  if(string_view.count <= 0 || n >= string_view.count) {
-    return (struct string_view) {
-      .data  = "",
-      .count = 0,
-    };
-  } else {
-    return (struct string_view) {
-      .data  = string_view.data  + n,
-      .count = string_view.count - n,
-    };
-  }
+    if(string_view.count <= 0 || n >= string_view.count) {
+        return (struct string_view) {
+            .data  = "",
+            .count = 0,
+        };
+    } else {
+        return (struct string_view) {
+            .data  = string_view.data  + n,
+            .count = string_view.count - n,
+        };
+    }
 }
 
 #endif // SV_IMPLEMENTATION

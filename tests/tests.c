@@ -1132,7 +1132,6 @@ void sv_skip_n_chars_passingNGreaterThanSvCount(void) {
                                token.count);
 }
 
-
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(sv_from_cstr_passingString);
