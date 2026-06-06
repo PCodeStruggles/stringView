@@ -1132,6 +1132,16 @@ void sv_skip_n_chars_passingNGreaterThanSvCount(void) {
                                token.count);
 }
 
+/* sv_read_entire_file */
+void sv_read_entire_file_sample1(void) {
+  const char* file_path = "./tests/samples/sample1.c";
+  const size_t file_size = 78;
+  sv* file_content = sv_read_entire_file(file_path);
+  TEST_ASSERT_NOT_NULL(file_content);
+  TEST_ASSERT_NOT_NULL(file_content->data);
+  TEST_ASSERT_EQUAL_size_t(file_size, file_content->count);
+}
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(sv_from_cstr_passingString);
@@ -1247,6 +1257,7 @@ int main(void) {
   RUN_TEST(sv_skip_n_chars_skippingUpToLastChar);
   RUN_TEST(sv_skip_n_chars_passingEmptySV);
   RUN_TEST(sv_skip_n_chars_passingNGreaterThanSvCount);
+  RUN_TEST(sv_read_entire_file_sample1);
   UNITY_END();
   return 0;
 }

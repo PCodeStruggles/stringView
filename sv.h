@@ -8,6 +8,7 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <errno.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -180,6 +181,13 @@ sv sv_split_by_space(sv *string_view);
  * if n is greater than string_view.count, return empty sv.
 */
 sv sv_skip_n_chars(sv string_view, size_t n);
+
+/**
+ * @brief read the file located at file_path into a sv.
+ * @param input file path.
+ * @return pointer to sv that contains tha content of the file provided in input.
+*/
+sv* sv_read_entire_file(const char* file_path);
 
 #ifdef SV_IMPLEMENTATION
 
@@ -382,6 +390,57 @@ sv sv_skip_n_chars(sv string_view, size_t n)
             .count = string_view.count - n,
         };
     }
+}
+
+sv* sv_read_entire_file(const char* file_path)
+{
+  if(file_path == NULL) SV_PANIC("File path cannot be NULL.");
+  FILE *input_file = fopen(file_path, "r");
+  if(input_file == NULL) {
+    fprintf(stderr, "ERROR %s:%d : %d - %s\n", __FILE__, __LINE__, 
+        errno, strerror(errno));
+    goto cleanup;
+  }
+  fseek(input_file, 0, SEEK_END);
+  long num_bytes = ftell(input_file);
+  fseek(input_file, 0, SEEK_SET);
+  sv* content_sv = malloc(sizeof(struct string_view));
+  if(content_sv == NULL) {
+    fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__, 
+        "Could not allocate enough memory for struct string_view");
+    goto cleanup;
+  }
+
+  content_sv->data = malloc(sizeof(char) * num_bytes);
+  if(content_sv->data == NULL) {
+    fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__, 
+        "Could not allocate enough buffer to store input file content");
+    goto cleanup;
+  }
+
+  size_t num_bytes_read = fread(content_sv->data, sizeof(char), num_bytes, input_file);
+  if(num_bytes != (long) num_bytes_read) {
+    fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__, 
+        "Could not read entire input file content into buffer");
+    goto cleanup;
+  }
+  content_sv->count = num_bytes_read;
+
+  fclose(input_file);
+
+  return content_sv;
+
+cleanup:
+  if(content_sv) {
+    if(content_sv->data) {
+      free(content_sv->data);
+      content_sv->data = NULL;
+    }
+    free(content_sv);
+    content_sv = NULL;
+  }
+  fclose(input_file);
+  return NULL;
 }
 
 #endif // SV_IMPLEMENTATION
