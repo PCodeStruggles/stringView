@@ -1,6 +1,11 @@
 #ifndef SV_H
 #define SV_H
 
+/**
+ * TODO: Add function to convert sv string to int.
+ * TODO: Add function to convert sv string to float.
+*/
+
 #include <assert.h>
 #include <ctype.h>
 #include <stdbool.h>
