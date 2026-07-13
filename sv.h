@@ -203,12 +203,10 @@ sv sv_from_cstr(const char *cstr)
 bool sv_equal(const sv sv1, const sv sv2)
 {
     if (sv1.count != sv2.count) return false;
-    for (size_t i = 0; i < sv1.count; i++) {
-        if (sv1.data[i] != sv2.data[i]) return false;
-    }
-    return true;
+    return memcmp(sv1.data, sv2.data, sv1.count) == 0;
 }
 
+// TODO: use memcmp for the comparison
 bool sv_equal_cstr(const sv string_view, const char *cstr)
 {
     if (cstr == NULL) {
@@ -394,53 +392,53 @@ sv sv_skip_n_chars(sv string_view, size_t n)
 
 sv* sv_read_entire_file(const char* file_path)
 {
-  if(file_path == NULL) SV_PANIC("File path cannot be NULL.");
-  FILE *input_file = fopen(file_path, "r");
-  if(input_file == NULL) {
-    fprintf(stderr, "ERROR %s:%d : %d - %s\n", __FILE__, __LINE__, 
-        errno, strerror(errno));
-    goto cleanup;
-  }
-  fseek(input_file, 0, SEEK_END);
-  long num_bytes = ftell(input_file);
-  fseek(input_file, 0, SEEK_SET);
-  sv* content_sv = malloc(sizeof(struct string_view));
-  if(content_sv == NULL) {
-    fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__, 
-        "Could not allocate enough memory for struct string_view");
-    goto cleanup;
-  }
+    if(file_path == NULL) SV_PANIC("File path cannot be NULL.");
+    FILE *input_file = fopen(file_path, "r");
+    if(input_file == NULL) {
+        fprintf(stderr, "ERROR %s:%d : %d - %s\n", __FILE__, __LINE__,
+                errno, strerror(errno));
+        goto cleanup;
+    }
+    fseek(input_file, 0, SEEK_END);
+    long num_bytes = ftell(input_file);
+    fseek(input_file, 0, SEEK_SET);
+    sv* content_sv = malloc(sizeof(struct string_view));
+    if(content_sv == NULL) {
+        fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__,
+                "Could not allocate enough memory for struct string_view");
+        goto cleanup;
+    }
 
-  content_sv->data = malloc(sizeof(char) * num_bytes);
-  if(content_sv->data == NULL) {
-    fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__, 
-        "Could not allocate enough buffer to store input file content");
-    goto cleanup;
-  }
+    content_sv->data = malloc(sizeof(char) * num_bytes);
+    if(content_sv->data == NULL) {
+        fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__,
+                "Could not allocate enough buffer to store input file content");
+        goto cleanup;
+    }
 
-  size_t num_bytes_read = fread(content_sv->data, sizeof(char), num_bytes, input_file);
-  if(num_bytes != (long) num_bytes_read) {
-    fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__, 
-        "Could not read entire input file content into buffer");
-    goto cleanup;
-  }
-  content_sv->count = num_bytes_read;
+    size_t num_bytes_read = fread(content_sv->data, sizeof(char), num_bytes, input_file);
+    if(num_bytes != (long) num_bytes_read) {
+        fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__,
+                "Could not read entire input file content into buffer");
+        goto cleanup;
+    }
+    content_sv->count = num_bytes_read;
 
-  fclose(input_file);
+    fclose(input_file);
 
-  return content_sv;
+    return content_sv;
 
 cleanup:
-  if(content_sv) {
-    if(content_sv->data) {
-      free(content_sv->data);
-      content_sv->data = NULL;
+    if(content_sv) {
+        if(content_sv->data) {
+            free(content_sv->data);
+            content_sv->data = NULL;
+        }
+        free(content_sv);
+        content_sv = NULL;
     }
-    free(content_sv);
-    content_sv = NULL;
-  }
-  fclose(input_file);
-  return NULL;
+    fclose(input_file);
+    return NULL;
 }
 
 #endif // SV_IMPLEMENTATION
