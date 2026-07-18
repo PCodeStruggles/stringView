@@ -404,21 +404,27 @@ sv* sv_read_entire_file(const char* file_path)
     fseek(input_file, 0, SEEK_SET);
     sv* content_sv = malloc(sizeof(struct string_view));
     if(content_sv == NULL) {
-        fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__,
+        fprintf(stderr, "ERROR %s:%d : %s\n",
+                __FILE__,
+                __LINE__,
                 "Could not allocate enough memory for struct string_view");
         goto cleanup;
     }
 
     content_sv->data = malloc(sizeof(char) * num_bytes);
     if(content_sv->data == NULL) {
-        fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__,
+        fprintf(stderr, "ERROR %s:%d : %s\n",
+                __FILE__,
+                __LINE__,
                 "Could not allocate enough buffer to store input file content");
         goto cleanup;
     }
 
     size_t num_bytes_read = fread(content_sv->data, sizeof(char), num_bytes, input_file);
     if(num_bytes != (long) num_bytes_read) {
-        fprintf(stderr, "ERROR %s:%d : %s\n", __FILE__, __LINE__,
+        fprintf(stderr, "ERROR %s:%d : %s\n",
+                __FILE__,
+                __LINE__,
                 "Could not read entire input file content into buffer");
         goto cleanup;
     }
