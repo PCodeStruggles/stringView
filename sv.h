@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -189,6 +190,14 @@ String_view sv_skip_n_chars(String_view sv, size_t n);
 */
 String_view* sv_read_entire_file(const char* file_path);
 
+/**
+ * @brief convert the String_view data into an int64_t.
+ * @param the String_view to be converted to int.
+ * @return int64_t conversion of the String_view data. If a non-digit character
+ * is encountered, returns 0.
+*/
+uint64_t sv_to_uint(String_view sv);
+
 #ifdef SV_IMPLEMENTATION
 
 String_view sv_from_cstr(const char *cstr)
@@ -321,7 +330,7 @@ String_view sv_trim_right(const String_view sv)
         .count = 0
     };
     size_t i = 0;
-    while (isspace(sv.data[(sv.count - 1) - i]) && ((sv.count - 1) - i) >= 0) {
+    while (isspace(sv.data[(sv.count - 1) - i]) && (int) ((sv.count - 1) - i) >= 0) {
         i++;
     }
     return (struct string_view) {
@@ -445,6 +454,20 @@ cleanup:
     }
     fclose(input_file);
     return NULL;
+}
+
+uint64_t sv_to_uint(String_view sv)
+{
+    if(sv.count <= 0) return INT_MIN;
+    uint64_t result = 0;
+    for (size_t i = 0; i < sv.count; i++) {
+        if(sv.data[i] >= '0' && sv.data[i] <= '9') {
+            result = (result * 10) + (sv.data[i] - '0');
+        } else {
+            return 0;
+        }
+    }
+    return result;
 }
 
 #endif // SV_IMPLEMENTATION
