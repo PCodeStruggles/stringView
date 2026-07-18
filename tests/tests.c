@@ -12,14 +12,14 @@ void tearDown(void) { return; }
 
 void sv_from_cstr_passingString(void) {
   const char *cstr = "name";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(4, actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
 }
 
 void sv_from_cstr_passingEmptyString(void) {
   const char *cstr = "";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(0, actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
 }
@@ -27,21 +27,21 @@ void sv_from_cstr_passingEmptyString(void) {
 void sv_from_cstr_passingStringWithLeadingSpaces(void) {
   const char *cstr =
       "             The quick brown fox jumps over the lazy dog. ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
 }
 
 void sv_from_cstr_passingLongString1(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog. ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
 }
 
 void sv_from_cstr_passingLongString2(void) {
   const char *cstr = "How valiantly did Beowulf fight the grim night-stalker! ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
 }
@@ -50,8 +50,8 @@ void sv_from_cstr_passingLongString2(void) {
 
 void sv_equal_passingIdenticalSvs(void) {
   const char *cstr = "Hello World!";
-  sv sv1 = sv_from_cstr(cstr);
-  sv sv2 = sv_from_cstr(cstr);
+  String_view sv1 = sv_from_cstr(cstr);
+  String_view sv2 = sv_from_cstr(cstr);
   bool ret = sv_equal(sv1, sv2);
   TEST_ASSERT_TRUE_MESSAGE(ret, "bool ret = sv_equal(sv1, sv2) should return true");
 }
@@ -59,16 +59,16 @@ void sv_equal_passingIdenticalSvs(void) {
 void sv_equal_passingDifferentSvs(void) {
   const char *cstr1 = "Hello World!";
   const char *cstr2 = "hello world!";
-  sv sv1 = sv_from_cstr(cstr1);
-  sv sv2 = sv_from_cstr(cstr2);
+  String_view sv1 = sv_from_cstr(cstr1);
+  String_view sv2 = sv_from_cstr(cstr2);
   bool ret = sv_equal(sv1, sv2);
   TEST_ASSERT_FALSE_MESSAGE(ret, "bool ret = sv_equal(sv1, sv2) should return false"); }
 
 void sv_equal_passingDifferentSvsInSize(void) {
   const char *cstr1 = "Hello World!";
   const char *cstr2 = "The quick brown fox jumps over the lazy dog.";
-  sv sv1 = sv_from_cstr(cstr1);
-  sv sv2 = sv_from_cstr(cstr2);
+  String_view sv1 = sv_from_cstr(cstr1);
+  String_view sv2 = sv_from_cstr(cstr2);
   bool ret = sv_equal(sv1, sv2);
   TEST_ASSERT_FALSE_MESSAGE(ret, "bool ret = sv_equal(sv1, sv2) should return false");
 }
@@ -76,8 +76,8 @@ void sv_equal_passingDifferentSvsInSize(void) {
 void sv_equal_passingOneEmptySV(void) {
   const char *cstr1 = "Hello World!";
   const char *cstr2 = "";
-  sv sv1 = sv_from_cstr(cstr1);
-  sv sv2 = sv_from_cstr(cstr2);
+  String_view sv1 = sv_from_cstr(cstr1);
+  String_view sv2 = sv_from_cstr(cstr2);
   bool ret = sv_equal(sv1, sv2);
   TEST_ASSERT_FALSE_MESSAGE(ret, "bool ret = sv_equal(sv1, sv2) should return false");
 }
@@ -85,8 +85,8 @@ void sv_equal_passingOneEmptySV(void) {
 void sv_equal_passingTwoEmptySvs(void) {
   const char *cstr1 = "";
   const char *cstr2 = "";
-  sv sv1 = sv_from_cstr(cstr1);
-  sv sv2 = sv_from_cstr(cstr2);
+  String_view sv1 = sv_from_cstr(cstr1);
+  String_view sv2 = sv_from_cstr(cstr2);
   bool ret = sv_equal(sv1, sv2);
   TEST_ASSERT_TRUE_MESSAGE(ret, "bool ret = sv_equal(sv1, sv2) should return true");
 }
@@ -95,34 +95,34 @@ void sv_equal_passingTwoEmptySvs(void) {
 
 void sv_equal_cstr_passingSameString(void) {
   const char *cstr = "Hello World!";
-  sv sv1 = sv_from_cstr(cstr);
+  String_view sv1 = sv_from_cstr(cstr);
   bool ret = sv_equal_cstr(sv1, cstr);
   TEST_ASSERT_TRUE_MESSAGE(ret, "bool ret = sv_equal_cstr(sv1, cstr) should return true");
 }
 
 void sv_equal_cstr_passingDifferentString(void) {
   const char *cstr = "Hello World!";
-  sv sv1 = sv_from_cstr("Hello Mundo!");
+  String_view sv1 = sv_from_cstr("Hello Mundo!");
   bool ret = sv_equal_cstr(sv1, cstr);
   TEST_ASSERT_FALSE_MESSAGE(ret, "bool ret = sv_equal_cstr(sv1, cstr) should return false");
 }
 
 void sv_equal_cstr_passingNULLAsCstr(void) {
-  sv sv1 = sv_from_cstr("Hello World!");
+  String_view sv1 = sv_from_cstr("Hello World!");
   bool ret = sv_equal_cstr(sv1, NULL);
   TEST_ASSERT_FALSE_MESSAGE(ret, "bool ret = sv_equal_cstr(sv1, NULL) should return false");
 }
 
 void sv_equal_cstr_passingEmptyStringInBothSvAndCstr(void) {
   const char *cstr = "";
-  sv sv1 = sv_from_cstr(cstr);
+  String_view sv1 = sv_from_cstr(cstr);
   bool ret = sv_equal_cstr(sv1, cstr);
   TEST_ASSERT_TRUE_MESSAGE(ret, "bool ret = sv_equal_cstr(sv1, cstr) should return true");
 }
 
 void sv_equal_cstr_passingSameEscapeSequence(void) {
   const char *cstr = "\t";
-  sv sv1 = sv_from_cstr(cstr);
+  String_view sv1 = sv_from_cstr(cstr);
   bool ret = sv_equal_cstr(sv1, cstr);
   TEST_ASSERT_TRUE_MESSAGE(ret, "bool ret = sv_equal_cstr(sv1, cstr) should return true");
 }
@@ -131,7 +131,7 @@ void sv_equal_cstr_passingSameEscapeSequence(void) {
 
 void sv_at_passingString(void) {
   const char *cstr = "name";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(4, actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   char c = sv_at(actual, 0);
@@ -140,7 +140,7 @@ void sv_at_passingString(void) {
 
 void sv_at_passingString2(void) {
   const char *cstr = "name";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(4, actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   char c = sv_at(actual, 2);
@@ -149,7 +149,7 @@ void sv_at_passingString2(void) {
 
 void sv_at_passingLongString1(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog. ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   char c = sv_at(actual, 10);
@@ -158,7 +158,7 @@ void sv_at_passingLongString1(void) {
 
 void sv_at_passingLongString2(void) {
   const char *cstr = "How valiantly did Beowulf fight the grim night-stalker! ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   char c = sv_at(actual, 17);
@@ -169,7 +169,7 @@ void sv_at_passingLongString2(void) {
 
 void sv_front_passingString(void) {
   const char *cstr = "name";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(4, actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   char c = sv_front(actual);
@@ -178,7 +178,7 @@ void sv_front_passingString(void) {
 
 void sv_front_passingLongString1(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog. ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   char c = sv_front(actual);
@@ -187,7 +187,7 @@ void sv_front_passingLongString1(void) {
 
 void sv_front_passingLongString2(void) {
   const char *cstr = "How valiantly did Beowulf fight the grim night-stalker! ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   char c = sv_front(actual);
@@ -198,7 +198,7 @@ void sv_front_passingLongString2(void) {
 
 void sv_back_passingString(void) {
   const char *cstr = "name";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(4, actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   char c = sv_back(actual);
@@ -207,7 +207,7 @@ void sv_back_passingString(void) {
 
 void sv_back_passingLongString1(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog. ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   char c = sv_back(actual);
@@ -216,7 +216,7 @@ void sv_back_passingLongString1(void) {
 
 void sv_back_passingLongString2(void) {
   const char *cstr = "How valiantly did Beowulf fight the grim night-stalker!";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   char c = sv_back(actual);
@@ -227,7 +227,7 @@ void sv_back_passingLongString2(void) {
 
 void sv_len_passingString(void) {
   const char *cstr = "name";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   size_t len = sv_len(actual);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), len);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
@@ -235,7 +235,7 @@ void sv_len_passingString(void) {
 
 void sv_len_passingEmptyString(void) {
   const char *cstr = "";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   size_t len = sv_len(actual);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), len);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
@@ -244,7 +244,7 @@ void sv_len_passingEmptyString(void) {
 void sv_len_passingStringWithLeadingSpaces(void) {
   const char *cstr =
       "             The quick brown fox jumps over the lazy dog. ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   size_t len = sv_len(actual);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), len);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
@@ -252,7 +252,7 @@ void sv_len_passingStringWithLeadingSpaces(void) {
 
 void sv_len_passingLongString1(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog. ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   size_t len = sv_len(actual);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), len);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
@@ -260,7 +260,7 @@ void sv_len_passingLongString1(void) {
 
 void sv_len_passingLongString2(void) {
   const char *cstr = "How valiantly did Beowulf fight the grim night-stalker! ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   size_t len = sv_len(actual);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), len);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
@@ -270,7 +270,7 @@ void sv_len_passingLongString2(void) {
 
 void sv_empty_passingString(void) {
   const char *cstr = "name";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   bool ret = sv_empty(actual);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), sv_len(actual));
   TEST_ASSERT_FALSE(ret);
@@ -279,7 +279,7 @@ void sv_empty_passingString(void) {
 
 void sv_empty_passingEmptyString(void) {
   const char *cstr = "";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   bool ret = sv_empty(actual);
   TEST_ASSERT_TRUE(ret);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), sv_len(actual));
@@ -288,7 +288,7 @@ void sv_empty_passingEmptyString(void) {
 
 void sv_empty_passingStringWithSpacesOnly(void) {
   const char *cstr = "        ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   bool ret = sv_empty(actual);
   TEST_ASSERT_FALSE(ret);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), sv_len(actual));
@@ -298,7 +298,7 @@ void sv_empty_passingStringWithSpacesOnly(void) {
 void sv_empty_passingStringWithLeadingSpaces(void) {
   const char *cstr =
       "             The quick brown fox jumps over the lazy dog. ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   bool ret = sv_empty(actual);
   TEST_ASSERT_FALSE(ret);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), sv_len(actual));
@@ -307,7 +307,7 @@ void sv_empty_passingStringWithLeadingSpaces(void) {
 
 void sv_empty_passingLongString1(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog. ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   bool ret = sv_empty(actual);
   TEST_ASSERT_FALSE(ret);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), sv_len(actual));
@@ -316,7 +316,7 @@ void sv_empty_passingLongString1(void) {
 
 void sv_empty_passingLongString2(void) {
   const char *cstr = "How valiantly did Beowulf fight the grim night-stalker! ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   bool ret = sv_empty(actual);
   TEST_ASSERT_FALSE(ret);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), sv_len(actual));
@@ -327,60 +327,60 @@ void sv_empty_passingLongString2(void) {
 
 void sv_remove_prefix_passingString(void) {
   const char *cstr = "name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_prefix = sv_remove_prefix(actual, "name_");
+  String_view actual_no_prefix = sv_remove_prefix(actual, "name_");
   TEST_ASSERT_EQUAL_STRING_LEN("surname", actual_no_prefix.data,
                                sv_len(actual_no_prefix));
 }
 
 void sv_remove_prefix_passingString2(void) {
   const char *cstr = "name__surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_prefix = sv_remove_prefix(actual, "name_");
+  String_view actual_no_prefix = sv_remove_prefix(actual, "name_");
   TEST_ASSERT_EQUAL_STRING_LEN("_surname", actual_no_prefix.data,
                                sv_len(actual_no_prefix));
 }
 
 void sv_remove_prefix_passingString3(void) {
   const char *cstr = "name_name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_prefix = sv_remove_prefix(actual, "name_");
+  String_view actual_no_prefix = sv_remove_prefix(actual, "name_");
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", actual_no_prefix.data,
                                sv_len(actual_no_prefix));
 }
 
 void sv_remove_prefix_passingStringWithUnmatchingPrefix(void) {
   const char *cstr = "nome_name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_prefix = sv_remove_prefix(actual, "name_");
+  String_view actual_no_prefix = sv_remove_prefix(actual, "name_");
   TEST_ASSERT_EQUAL_STRING_LEN("nome_name_surname", actual_no_prefix.data,
                                sv_len(actual_no_prefix));
 }
 
 void sv_remove_prefix_passingStringWithUnmatchingPrefix2(void) {
   const char *cstr = "nam_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_prefix = sv_remove_prefix(actual, "name_");
+  String_view actual_no_prefix = sv_remove_prefix(actual, "name_");
   TEST_ASSERT_EQUAL_STRING_LEN("nam_surname", actual_no_prefix.data,
                                sv_len(actual_no_prefix));
 }
 
 void sv_remove_prefix_passingEmptrySv(void) {
   const char *cstr = "";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_prefix = sv_remove_prefix(actual, "name_");
+  String_view actual_no_prefix = sv_remove_prefix(actual, "name_");
   TEST_ASSERT_EQUAL_STRING_LEN("", actual_no_prefix.data,
                                sv_len(actual_no_prefix));
 }
@@ -389,91 +389,91 @@ void sv_remove_prefix_passingEmptrySv(void) {
 
 void sv_remove_suffix_passingString(void) {
   const char *cstr = "name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+  String_view actual_no_suffix = sv_remove_suffix(actual, "surname");
   TEST_ASSERT_EQUAL_STRING_LEN("name_", actual_no_suffix.data,
                                sv_len(actual_no_suffix));
 }
 
 void sv_remove_suffix_passingString2(void) {
   const char *cstr = "name__surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+  String_view actual_no_suffix = sv_remove_suffix(actual, "surname");
   TEST_ASSERT_EQUAL_STRING_LEN("name__", actual_no_suffix.data,
                                sv_len(actual_no_suffix));
 }
 
 void sv_remove_suffix_passingString3(void) {
   const char *cstr = "name_name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+  String_view actual_no_suffix = sv_remove_suffix(actual, "surname");
   TEST_ASSERT_EQUAL_STRING_LEN("name_name_", actual_no_suffix.data,
                                sv_len(actual_no_suffix));
 }
 
 void sv_remove_suffix_passingString4(void) {
   const char *cstr = "_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+  String_view actual_no_suffix = sv_remove_suffix(actual, "surname");
   TEST_ASSERT_EQUAL_STRING_LEN("_", actual_no_suffix.data,
                                sv_len(actual_no_suffix));
 }
 
 void sv_remove_suffix_passingString5(void) {
   const char *cstr = "surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+  String_view actual_no_suffix = sv_remove_suffix(actual, "surname");
   TEST_ASSERT_EQUAL_STRING_LEN("", actual_no_suffix.data,
                                sv_len(actual_no_suffix));
 }
 
 void sv_remove_suffix_passingStringWithUnmatchingSuffix(void) {
   const char *cstr = "name_name_surnome";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_suffix = sv_remove_suffix(actual, "surnome");
+  String_view actual_no_suffix = sv_remove_suffix(actual, "surnome");
   TEST_ASSERT_EQUAL_STRING_LEN("name_name_surnome", actual_no_suffix.data,
                                sv_len(actual_no_suffix));
 }
 
 void sv_remove_suffix_passingStringWithUnmatchingSuffix2(void) {
   const char *cstr = "name_name_surname_";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+  String_view actual_no_suffix = sv_remove_suffix(actual, "surname");
   TEST_ASSERT_EQUAL_STRING_LEN("name_name_surname_", actual_no_suffix.data,
                                sv_len(actual_no_suffix));
 }
 
 void sv_remove_suffix_passingEmptrySv(void) {
   const char *cstr = "";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_suffix = sv_remove_suffix(actual, "surname");
+  String_view actual_no_suffix = sv_remove_suffix(actual, "surname");
   TEST_ASSERT_EQUAL_STRING_LEN("", actual_no_suffix.data,
                                sv_len(actual_no_suffix));
 }
 
 void sv_remove_suffixprefix_combined(void) {
   const char *cstr = "sv_remove_suffix";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv actual_no_prefix = sv_remove_prefix(actual, "sv_");
-  sv actual_no_suffix = sv_remove_suffix(actual_no_prefix, "_suffix");
+  String_view actual_no_prefix = sv_remove_prefix(actual, "sv_");
+  String_view actual_no_suffix = sv_remove_suffix(actual_no_prefix, "_suffix");
   TEST_ASSERT_EQUAL_STRING_LEN("remove", actual_no_suffix.data,
                                sv_len(actual_no_suffix));
 }
@@ -482,7 +482,7 @@ void sv_remove_suffixprefix_combined(void) {
 
 void sv_starts_with_passingString(void) {
   const char *cstr = "name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_starts_with(actual, "name_");
@@ -491,7 +491,7 @@ void sv_starts_with_passingString(void) {
 
 void sv_starts_with_passingString2(void) {
   const char *cstr = "name__surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_starts_with(actual, "name_");
@@ -500,7 +500,7 @@ void sv_starts_with_passingString2(void) {
 
 void sv_starts_with_passingString3(void) {
   const char *cstr = "name_name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_starts_with(actual, "name_");
@@ -509,7 +509,7 @@ void sv_starts_with_passingString3(void) {
 
 void sv_starts_with_passingStringWithUnmatchingPrefix(void) {
   const char *cstr = "nome_name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_starts_with(actual, "name_");
@@ -518,7 +518,7 @@ void sv_starts_with_passingStringWithUnmatchingPrefix(void) {
 
 void sv_starts_with_passingStringWithUnmatchingPrefix2(void) {
   const char *cstr = "nam_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_starts_with(actual, "name_");
@@ -527,7 +527,7 @@ void sv_starts_with_passingStringWithUnmatchingPrefix2(void) {
 
 void sv_starts_with_passingEmptrySv(void) {
   const char *cstr = "";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_starts_with(actual, "name_");
@@ -538,7 +538,7 @@ void sv_starts_with_passingEmptrySv(void) {
 
 void sv_ends_with_passingString(void) {
   const char *cstr = "name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_ends_with(actual, "surname");
@@ -547,7 +547,7 @@ void sv_ends_with_passingString(void) {
 
 void sv_ends_with_passingString2(void) {
   const char *cstr = "name__surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_ends_with(actual, "surname");
@@ -556,7 +556,7 @@ void sv_ends_with_passingString2(void) {
 
 void sv_ends_with_passingString3(void) {
   const char *cstr = "name_name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_ends_with(actual, "surname");
@@ -565,7 +565,7 @@ void sv_ends_with_passingString3(void) {
 
 void sv_ends_with_passingString4(void) {
   const char *cstr = "_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_ends_with(actual, "surname");
@@ -574,7 +574,7 @@ void sv_ends_with_passingString4(void) {
 
 void sv_ends_with_passingString5(void) {
   const char *cstr = "surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_ends_with(actual, "surname");
@@ -583,7 +583,7 @@ void sv_ends_with_passingString5(void) {
 
 void sv_ends_with_passingStringWithUnmatchingSuffix(void) {
   const char *cstr = "name_name_surnome";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_ends_with(actual, "surname");
@@ -592,7 +592,7 @@ void sv_ends_with_passingStringWithUnmatchingSuffix(void) {
 
 void sv_ends_with_passingEmptrySv(void) {
   const char *cstr = "";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
   bool ret = sv_ends_with(actual, "surname");
@@ -604,7 +604,7 @@ void sv_ends_with_passingEmptrySv(void) {
 void sv_contains_svContainsCstr(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
   const char *needle = "fox";
-  sv haystack = sv_from_cstr(cstr);
+  String_view haystack = sv_from_cstr(cstr);
   bool ret = sv_contains(haystack, needle);
   TEST_ASSERT_TRUE_MESSAGE(
       ret, "bool ret = sv_contains(haystack, needle) should return true");
@@ -613,7 +613,7 @@ void sv_contains_svContainsCstr(void) {
 void sv_contains_svContainsCstr2(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
   const char *needle = "dog";
-  sv haystack = sv_from_cstr(cstr);
+  String_view haystack = sv_from_cstr(cstr);
   bool ret = sv_contains(haystack, needle);
   TEST_ASSERT_TRUE_MESSAGE(
       ret, "bool ret = sv_contains(haystack, needle) should return true");
@@ -622,7 +622,7 @@ void sv_contains_svContainsCstr2(void) {
 void sv_contains_svContainsCstr3(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
   const char *needle = ".";
-  sv haystack = sv_from_cstr(cstr);
+  String_view haystack = sv_from_cstr(cstr);
   bool ret = sv_contains(haystack, needle);
   TEST_ASSERT_TRUE_MESSAGE(
       ret, "bool ret = sv_contains(haystack, needle) should return true");
@@ -631,7 +631,7 @@ void sv_contains_svContainsCstr3(void) {
 void sv_contains_svAndCstrAreEqual(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
   const char *needle = "The quick brown fox jumps over the lazy dog.";
-  sv haystack = sv_from_cstr(cstr);
+  String_view haystack = sv_from_cstr(cstr);
   bool ret = sv_contains(haystack, needle);
   TEST_ASSERT_TRUE_MESSAGE(
       ret, "bool ret = sv_contains(haystack, needle) should return true");
@@ -640,7 +640,7 @@ void sv_contains_svAndCstrAreEqual(void) {
 void sv_contains_svDoesNotContainsCstr(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
   const char *needle = "Turtle";
-  sv haystack = sv_from_cstr(cstr);
+  String_view haystack = sv_from_cstr(cstr);
   bool ret = sv_contains(haystack, needle);
   TEST_ASSERT_FALSE_MESSAGE(
       ret, "bool ret = sv_contains(haystack, needle) should return false");
@@ -649,7 +649,7 @@ void sv_contains_svDoesNotContainsCstr(void) {
 void sv_contains_svDoesNotContainsCstr2(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
   const char *needle = "  ";
-  sv haystack = sv_from_cstr(cstr);
+  String_view haystack = sv_from_cstr(cstr);
   bool ret = sv_contains(haystack, needle);
   TEST_ASSERT_FALSE_MESSAGE(
       ret, "bool ret = sv_contains(haystack, needle) should return false");
@@ -658,7 +658,7 @@ void sv_contains_svDoesNotContainsCstr2(void) {
 void sv_contains_emptySv(void) {
   const char *cstr = "";
   const char *needle = "brown fox";
-  sv haystack = sv_from_cstr(cstr);
+  String_view haystack = sv_from_cstr(cstr);
   bool ret = sv_contains(haystack, needle);
   TEST_ASSERT_FALSE_MESSAGE(
       ret, "bool ret = sv_contains(haystack, needle) should return false");
@@ -667,7 +667,7 @@ void sv_contains_emptySv(void) {
 void sv_contains_passingNULLasCstr(void) {
   const char *cstr = "Hello World!";
   const char *needle = NULL;
-  sv haystack = sv_from_cstr(cstr);
+  String_view haystack = sv_from_cstr(cstr);
   bool ret = sv_contains(haystack, needle);
   TEST_ASSERT_FALSE_MESSAGE(
       ret, "bool ret = sv_contains(haystack, needle) should return false");
@@ -677,84 +677,84 @@ void sv_contains_passingNULLasCstr(void) {
 
 void sv_trim_left_passingString(void) {
   const char *cstr = "    name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_left(actual);
+  String_view trimmed = sv_trim_left(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);
 }
 
 void sv_trim_left_passingString2(void) {
   const char *cstr = "\tname_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_left(actual);
+  String_view trimmed = sv_trim_left(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);
 }
 
 void sv_trim_left_passingString3(void) {
   const char *cstr = "\nname_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_left(actual);
+  String_view trimmed = sv_trim_left(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);
 }
 
 void sv_trim_left_passingString4(void) {
   const char *cstr =
       "             The quick brown fox jumps over the lazy dog. ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_left(actual);
+  String_view trimmed = sv_trim_left(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("The quick brown fox jumps over the lazy dog. ",
                                trimmed.data, trimmed.count);
 }
 
 void sv_trim_left_passingEmptySv(void) {
   const char *cstr = "";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_left(actual);
+  String_view trimmed = sv_trim_left(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
 void sv_trim_left_passingSvMadeOfSpaces(void) {
   const char *cstr = "    ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_left(actual);
+  String_view trimmed = sv_trim_left(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
 void sv_trim_left_passingSvMadeOfSpaces2(void) {
   const char *cstr = "\n    ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_left(actual);
+  String_view trimmed = sv_trim_left(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
 void sv_trim_left_passingSvMadeOfSpaces3(void) {
   const char *cstr = "\t    ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_left(actual);
+  String_view trimmed = sv_trim_left(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
 void sv_trim_left_passingStringWithNoLeadingSpaces(void) {
   const char *cstr = "name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_left(actual);
+  String_view trimmed = sv_trim_left(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);
 }
 
@@ -762,73 +762,73 @@ void sv_trim_left_passingStringWithNoLeadingSpaces(void) {
 
 void sv_trim_right_passingString(void) {
   const char *cstr = "name_surname   ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_right(actual);
+  String_view trimmed = sv_trim_right(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);
 }
 
 void sv_trim_right_passingString2(void) {
   const char *cstr = "name_surname\t";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_right(actual);
+  String_view trimmed = sv_trim_right(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);
 }
 
 void sv_trim_right_passingString3(void) {
   const char *cstr = "name_surname\n";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_right(actual);
+  String_view trimmed = sv_trim_right(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);
 }
 
 void sv_trim_right_passingStringWithNoLeadingSpaces(void) {
   const char *cstr = "name_surname";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_right(actual);
+  String_view trimmed = sv_trim_right(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);
 }
 
 void sv_trim_right_passingEmptySv(void) {
   const char *cstr = "";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_right(actual);
+  String_view trimmed = sv_trim_right(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
 void sv_trim_right_passingSvMadeOfSpaces(void) {
   const char *cstr = "    ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_right(actual);
+  String_view trimmed = sv_trim_right(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
 void sv_trim_right_passingSvMadeOfSpaces2(void) {
   const char *cstr = "    \t";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_right(actual);
+  String_view trimmed = sv_trim_right(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
 void sv_trim_right_passingSvMadeOfSpaces3(void) {
   const char *cstr = "    \n";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim_right(actual);
+  String_view trimmed = sv_trim_right(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
@@ -836,73 +836,73 @@ void sv_trim_right_passingSvMadeOfSpaces3(void) {
 
 void sv_trim_passingSv(void) {
   const char *cstr = "    name_surname     ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim(actual);
+  String_view trimmed = sv_trim(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);
 }
 
 void sv_trim_passingSv2(void) {
   const char *cstr = "\nname_surname     ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim(actual);
+  String_view trimmed = sv_trim(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);
 }
 
 void sv_trim_passingSv3(void) {
   const char *cstr = "\tname_surname\n";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim(actual);
+  String_view trimmed = sv_trim(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("name_surname", trimmed.data, trimmed.count);
 }
 
 void sv_trim_passingEmptySV(void) {
   const char *cstr = "";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim(actual);
+  String_view trimmed = sv_trim(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
 void sv_trim_passingSvMadeOfSpaces(void) {
   const char *cstr = "    ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim(actual);
+  String_view trimmed = sv_trim(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
 void sv_trim_passingSvMadeOfSpaces2(void) {
   const char *cstr = "\n    ";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim(actual);
+  String_view trimmed = sv_trim(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
 void sv_trim_passingSvMadeOfSpaces3(void) {
   const char *cstr = "\n\t";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim(actual);
+  String_view trimmed = sv_trim(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
 void sv_trim_passingNULLTerminatedStringSv(void) {
   const char *cstr = "\0";
-  sv actual = sv_from_cstr(cstr);
+  String_view actual = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), actual.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, actual.data, strlen(cstr));
-  sv trimmed = sv_trim(actual);
+  String_view trimmed = sv_trim(actual);
   TEST_ASSERT_EQUAL_STRING_LEN("", trimmed.data, trimmed.count);
 }
 
@@ -910,10 +910,10 @@ void sv_trim_passingNULLTerminatedStringSv(void) {
 
 void sv_split_by_space_case1(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_split_by_space(&string_view);
+  String_view token = sv_split_by_space(&string_view);
   TEST_ASSERT_EQUAL_STRING_LEN("The", token.data, token.count);
   token = sv_split_by_space(&string_view);
   TEST_ASSERT_EQUAL_STRING_LEN("quick", token.data, token.count);
@@ -935,20 +935,20 @@ void sv_split_by_space_case1(void) {
 
 void sv_split_by_space_case2(void) {
   const char *cstr = "   ";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_split_by_space(&string_view);
+  String_view token = sv_split_by_space(&string_view);
   TEST_ASSERT_EQUAL_STRING_LEN("", token.data, token.count);
 }
 
 void sv_split_by_space_case3(void) {
   const char *cstr =
       "The quick          brown fox   jumps over    the lazy dog.";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_split_by_space(&string_view);
+  String_view token = sv_split_by_space(&string_view);
   TEST_ASSERT_EQUAL_STRING_LEN("The", token.data, token.count);
   token = sv_split_by_space(&string_view);
   TEST_ASSERT_EQUAL_STRING_LEN("quick", token.data, token.count);
@@ -969,7 +969,7 @@ void sv_split_by_space_case3(void) {
 }
 
 void sv_split_by_space_passingNULL(void) {
-  sv token = sv_split_by_space(NULL);
+  String_view token = sv_split_by_space(NULL);
   TEST_ASSERT_EQUAL_STRING_LEN("", token.data, token.count);
 }
 
@@ -977,10 +977,10 @@ void sv_split_by_space_passingNULL(void) {
 
 void sv_split_by_delim_case1(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_split_by_delim(&string_view, ' ');
+  String_view token = sv_split_by_delim(&string_view, ' ');
   TEST_ASSERT_EQUAL_STRING_LEN("The", token.data, token.count);
   token = sv_split_by_delim(&string_view, ' ');
   TEST_ASSERT_EQUAL_STRING_LEN("quick", token.data, token.count);
@@ -1002,10 +1002,10 @@ void sv_split_by_delim_case1(void) {
 
 void sv_split_by_delim_case2(void) {
   const char *cstr = "The,quick,brown,fox,jumps,over,the,lazy,dog";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_split_by_delim(&string_view, ',');
+  String_view token = sv_split_by_delim(&string_view, ',');
   TEST_ASSERT_EQUAL_STRING_LEN("The", token.data, token.count);
   token = sv_split_by_delim(&string_view, ',');
   TEST_ASSERT_EQUAL_STRING_LEN("quick", token.data, token.count);
@@ -1027,10 +1027,10 @@ void sv_split_by_delim_case2(void) {
 
 void sv_split_by_delim_case3(void) {
   const char *cstr = "The/quick/brown/fox/jumps/over/the/lazy/dog";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_split_by_delim(&string_view, '/');
+  String_view token = sv_split_by_delim(&string_view, '/');
   TEST_ASSERT_EQUAL_STRING_LEN("The", token.data, token.count);
   token = sv_split_by_delim(&string_view, '/');
   TEST_ASSERT_EQUAL_STRING_LEN("quick", token.data, token.count);
@@ -1051,28 +1051,28 @@ void sv_split_by_delim_case3(void) {
 }
 
 void sv_split_by_delim_passingNULLPointer(void) {
-  sv token = sv_split_by_delim(NULL, '/');
+  String_view token = sv_split_by_delim(NULL, '/');
   TEST_ASSERT_EQUAL_STRING_LEN("", token.data, token.count);
 }
 
 void sv_split_by_delim_passingEmptySv(void) {
-  sv string_view = sv_from_cstr("");
-  sv token = sv_split_by_delim(&string_view, '/');
+  String_view string_view = sv_from_cstr("");
+  String_view token = sv_split_by_delim(&string_view, '/');
   TEST_ASSERT_EQUAL_STRING_LEN("", token.data, token.count);
 }
 
 void sv_split_by_delim_passingEmptyNULLTerminatedStringSv(void) {
-  sv string_view = sv_from_cstr("\0");
-  sv token = sv_split_by_delim(&string_view, '/');
+  String_view string_view = sv_from_cstr("\0");
+  String_view token = sv_split_by_delim(&string_view, '/');
   TEST_ASSERT_EQUAL_STRING_LEN("", token.data, token.count);
 }
 
 void sv_split_by_delim_delimNotInString(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_split_by_delim(&string_view, ',');
+  String_view token = sv_split_by_delim(&string_view, ',');
   TEST_ASSERT_EQUAL_STRING_LEN("The quick brown fox jumps over the lazy dog.",
                                token.data, token.count);
 }
@@ -1081,20 +1081,20 @@ void sv_split_by_delim_delimNotInString(void) {
 
 void sv_skip_n_chars_normalCase(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_skip_n_chars(string_view, 3);
+  String_view token = sv_skip_n_chars(string_view, 3);
   TEST_ASSERT_EQUAL_STRING_LEN(" quick brown fox jumps over the lazy dog.",
                                token.data, token.count);
 }
 
 void sv_skip_n_chars_skippingEntireString(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_skip_n_chars(string_view, string_view.count);
+  String_view token = sv_skip_n_chars(string_view, string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN("",
                                token.data, 
                                token.count);
@@ -1102,10 +1102,10 @@ void sv_skip_n_chars_skippingEntireString(void) {
 
 void sv_skip_n_chars_skippingUpToLastChar(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_skip_n_chars(string_view, string_view.count - 1);
+  String_view token = sv_skip_n_chars(string_view, string_view.count - 1);
   TEST_ASSERT_EQUAL_STRING_LEN(".",
                                token.data, 
                                token.count);
@@ -1113,20 +1113,20 @@ void sv_skip_n_chars_skippingUpToLastChar(void) {
 
 void sv_skip_n_chars_passingEmptySV(void) {
   const char *cstr = "";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_skip_n_chars(string_view, 0);
+  String_view token = sv_skip_n_chars(string_view, 0);
   TEST_ASSERT_EQUAL_STRING_LEN("",
                                token.data, token.count);
 }
 
 void sv_skip_n_chars_passingNGreaterThanSvCount(void) {
   const char *cstr = "The quick brown fox jumps over the lazy dog.";
-  sv string_view = sv_from_cstr(cstr);
+  String_view string_view = sv_from_cstr(cstr);
   TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
   TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
-  sv token = sv_skip_n_chars(string_view, string_view.count + 10);
+  String_view token = sv_skip_n_chars(string_view, string_view.count + 10);
   TEST_ASSERT_EQUAL_STRING_LEN(".",
                                token.data, 
                                token.count);
@@ -1136,7 +1136,7 @@ void sv_skip_n_chars_passingNGreaterThanSvCount(void) {
 void sv_read_entire_file_sample1(void) {
   const char* file_path = "./tests/samples/sample1.c";
   const size_t file_size = 78;
-  sv* file_content = sv_read_entire_file(file_path);
+  String_view* file_content = sv_read_entire_file(file_path);
   TEST_ASSERT_NOT_NULL(file_content);
   TEST_ASSERT_NOT_NULL(file_content->data);
   TEST_ASSERT_EQUAL_size_t(file_size, file_content->count);
