@@ -458,7 +458,7 @@ cleanup:
 
 uint64_t sv_to_uint(String_view sv)
 {
-    if(sv.count <= 0) return INT_MIN;
+    if(sv.count <= 0) return 0;
     uint64_t result = 0;
     for (size_t i = 0; i < sv.count; i++) {
         if(sv.data[i] >= '0' && sv.data[i] <= '9') {
