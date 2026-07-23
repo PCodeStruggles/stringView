@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#define UNITY_INCLUDE_DOUBLE
 #include "../unity/unity.h"
+
 #define SV_IMPLEMENTATION
 #include "../sv.h"
 
@@ -1360,6 +1362,44 @@ void sv_to_uint4(void)
     TEST_ASSERT_EQUAL_INT64(1, converted_num);
 }
 
+/* sv_to_double */
+
+void sv_to_double1(void)
+{
+    String_view sv = SV_FROM_LIT("10.05");
+    double converted_num = sv_to_double(sv);
+    TEST_ASSERT_EQUAL_DOUBLE(10.05, converted_num);
+}
+
+void sv_to_double2(void)
+{
+    String_view sv = SV_FROM_LIT("10239.1284");
+    double converted_num = sv_to_double(sv);
+    TEST_ASSERT_EQUAL_DOUBLE(10239.1284, converted_num);
+}
+
+void sv_to_double3(void)
+{
+    String_view sv = SV_FROM_LIT("0");
+    double converted_num = sv_to_double(sv);
+    TEST_ASSERT_EQUAL_DOUBLE(0, converted_num);
+}
+
+void sv_to_double4(void)
+{
+    String_view sv = SV_FROM_LIT("0.04");
+    double converted_num = sv_to_double(sv);
+    TEST_ASSERT_EQUAL_DOUBLE(0.04, converted_num);
+}
+
+void sv_to_double_invalidInput(void)
+{
+    String_view sv = SV_FROM_LIT("a.5");
+    double converted_num = sv_to_double(sv);
+    TEST_ASSERT_EQUAL_DOUBLE(0, converted_num);
+}
+
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -1486,7 +1526,16 @@ int main(void)
     RUN_TEST(sv_to_uint1);
     RUN_TEST(sv_to_uint2);
     RUN_TEST(sv_to_uint3);
-    RUN_TEST(sv_to_uint4);        
+    RUN_TEST(sv_to_uint4);
+    RUN_TEST(sv_to_double1);
+    RUN_TEST(sv_to_double2);
+    RUN_TEST(sv_to_double3);
+    RUN_TEST(sv_to_double4);    
+    RUN_TEST(sv_to_double_invalidInput);
     UNITY_END();
     return 0;
 }
+
+
+
+

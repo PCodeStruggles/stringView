@@ -3,8 +3,6 @@
 
 /**
  * TODO: Add function to convert sv string to signed int.
- * TODO: Add function to convert sv string to float.
- * TODO: Use sizeof() to get the lenght of cstr in cstr to sv funcs. 
 */
 
 #include <assert.h>
@@ -198,12 +196,20 @@ String_view sv_skip_n_chars(String_view sv, int n);
 String_view* sv_read_entire_file(const char* file_path);
 
 /**
- * @brief convert the String_view data into an int64_t.
+ * @brief convert the String_view data into an uint64_t.
  * @param the String_view to be converted to int.
- * @return int64_t conversion of the String_view data. If a non-digit character
+ * @return uint64_t conversion of the String_view data. If a non-digit character
  * is encountered, returns 0.
 */
 uint64_t sv_to_uint(String_view sv);
+
+/**
+ * @brief convert the String_view data into an double.
+ * @param the String_view to be converted to double.
+ * @return double conversion of the String_view data. If a non-digit character
+ * is encountered, returns 0.
+*/
+double sv_to_double(String_view sv);
 
 #ifdef SV_IMPLEMENTATION
 
@@ -463,6 +469,18 @@ uint64_t sv_to_uint(String_view sv)
             return 0;
         }
     }
+    return result;
+}
+
+double sv_to_double(String_view sv)
+{
+    if(sv.count <= 0) return 0;
+    char cstr[sv.count + 1];
+    memcpy(cstr, sv.data, sv.count);
+    cstr[sv.count + 1] = '\0';
+    void* endptr = 0;
+    double result = strtod(cstr, endptr);
+    if (cstr == endptr) return 0;
     return result;
 }
 
