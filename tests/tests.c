@@ -1161,6 +1161,26 @@ void sv_split_by_delim_case3(void)
     TEST_ASSERT_EQUAL_STRING_LEN("dog.", token.data, token.count);
 }
 
+
+void sv_split_by_delim_case4(void)
+{
+    const char *cstr = "1,0,0,0,99";
+    String_view string_view = sv_from_cstr(cstr);
+    TEST_ASSERT_EQUAL_size_t(strlen(cstr), string_view.count);
+    TEST_ASSERT_EQUAL_STRING_LEN(cstr, string_view.data, strlen(cstr));
+    String_view token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("1", token.data, token.count);
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("0", token.data, token.count);
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("0", token.data, token.count);        
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("0", token.data, token.count);
+    token = sv_split_by_delim(&string_view, ',');
+    TEST_ASSERT_EQUAL_STRING_LEN("99", token.data, token.count);        
+}
+
+
 void sv_split_by_delim_passingNULLPointer(void)
 {
     String_view token = sv_split_by_delim(NULL, '/');
@@ -1404,6 +1424,7 @@ int main(void)
     RUN_TEST(sv_split_by_delim_case1);
     RUN_TEST(sv_split_by_delim_case2);
     RUN_TEST(sv_split_by_delim_case3);
+    RUN_TEST(sv_split_by_delim_case4);    
     RUN_TEST(sv_split_by_delim_passingNULLPointer);
     RUN_TEST(sv_split_by_delim_passingEmptySv);
     RUN_TEST(sv_split_by_delim_passingEmptyNULLTerminatedStringSv);

@@ -2,8 +2,9 @@
 #define SV_H
 
 /**
- * TODO: Add function to convert sv string to int.
+ * TODO: Add function to convert sv string to signed int.
  * TODO: Add function to convert sv string to float.
+ * TODO: Use sizeof() to get the lenght of cstr in cstr to sv funcs. 
 */
 
 #include <assert.h>
@@ -26,7 +27,7 @@
 
 typedef struct string_view {
     const char *data;
-    size_t     count;
+    int        count;
 } String_view;
 
 /**
@@ -181,7 +182,7 @@ String_view sv_split_by_space(String_view *sv);
  * @return return a string view with the data pointer advanced by n chars.
  * if n is greater than string_view.count, return empty sv.
 */
-String_view sv_skip_n_chars(String_view sv, size_t n);
+String_view sv_skip_n_chars(String_view sv, int n);
 
 /**
  * @brief read the file located at file_path into a sv.
@@ -215,21 +216,10 @@ bool sv_equal(const String_view sv1, const String_view sv2)
     return memcmp(sv1.data, sv2.data, sv1.count) == 0;
 }
 
-// TODO: use memcmp for the comparison
 bool sv_equal_cstr(const String_view sv, const char *cstr)
 {
-    if (cstr == NULL) {
-        return false;
-    }
-    if (strlen(cstr) != sv.count) {
-        return false;
-    }
-    for (size_t i = 0; i < sv.count; i++) {
-        if (cstr[i] != sv.data[i]) {
-            return false;
-        }
-    }
-    return true;
+    if (cstr == NULL ||  (int) strlen(cstr) != sv.count) return false;
+    return memcmp(sv.data, cstr, sv.count) == 0;
 }
 
 String_view sv_remove_prefix(const String_view sv, const char *prefix)
@@ -262,9 +252,9 @@ String_view sv_remove_suffix(const String_view sv, const char *suffix)
 
 bool sv_contains(const String_view sv, const char *cstr)
 {
-    if (cstr == NULL || strlen(cstr) > sv.count) return false;
+    if (cstr == NULL || (int) strlen(cstr) > sv.count) return false;
     size_t cstr_len = strlen(cstr);
-    size_t i = 0;
+    int i = 0;
     while (i < sv.count) {
         for (size_t k = i, j = 0;
                 j < cstr_len && sv.data[k] == cstr[j];
@@ -312,7 +302,7 @@ String_view sv_trim_left(const String_view sv)
         return (struct string_view) {
         .data = "", .count = 0
     };
-    size_t i = 0;
+    int i = 0;
     while (isspace(sv.data[i]) && i < sv.count) {
         i++;
     }
@@ -361,7 +351,7 @@ String_view sv_split_by_delim(String_view *sv, const char c)
             sv->count -= 1)
         ;
 
-    size_t i = 0;
+    int i = 0;
     while (i < sv->count && sv->data[i] != c) i++;
 
     String_view ret = {
@@ -369,8 +359,8 @@ String_view sv_split_by_delim(String_view *sv, const char c)
         .count = i
     };
 
-    sv->data  = sv->data  + i;
-    sv->count = sv->count - i;
+    sv->data  = sv->data  + i + 1;
+    sv->count = sv->count - i - 1;
 
     return ret;
 }
@@ -384,7 +374,7 @@ String_view sv_split_by_space(String_view *sv)
     }
 }
 
-String_view sv_skip_n_chars(String_view sv, size_t n)
+String_view sv_skip_n_chars(String_view sv, int n)
 {
     if(sv.count <= 0 || n >= sv.count) {
         return (String_view) {
@@ -460,7 +450,7 @@ uint64_t sv_to_uint(String_view sv)
 {
     if(sv.count <= 0) return 0;
     uint64_t result = 0;
-    for (size_t i = 0; i < sv.count; i++) {
+    for (int i = 0; i < sv.count; i++) {
         if(sv.data[i] >= '0' && sv.data[i] <= '9') {
             result = (result * 10) + (sv.data[i] - '0');
         } else {
