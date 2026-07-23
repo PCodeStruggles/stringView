@@ -31,6 +31,12 @@ typedef struct string_view {
 } String_view;
 
 /**
+ * @brief Construct a String_view from C literal.
+ * @param C literal
+ */
+#define SV_FROM_LIT(lit) (String_view) { .data = lit, .count = sizeof(lit) - 1 }
+
+/**
  * @brief create a string view from the cstr passed as argument
  * @param cstr R string
  * @return sv struct with sv.data = cstr and sv.count = strlen(cstr)
@@ -43,31 +49,31 @@ String_view sv_from_cstr(const char *cstr);
  * @param sv string view to be used
  * @param pos index of the char
 */
-#define sv_at(sv, pos) (sv).data[assert((pos) >= 0 && (pos) < (sv).count), (pos)]
+#define SV_AT(sv, pos) (sv).data[assert((pos) >= 0 && (pos) < (sv).count), (pos)]
 
 /**
  * @brief get the character at the beginnin of sv.data
  * @param sv string view to be used
 */
-#define sv_front(sv) (sv).data[assert((sv).count > 0), 0]
+#define SV_FRONT(sv) (sv).data[assert((sv).count > 0), 0]
 
 /**
  * @brief get the character at the end of sv.data
  * @param sv string view to be used
 */
-#define sv_back(sv) (sv).data[assert((sv).count > 0), (sv).count - 1]
+#define SV_BACK(sv) (sv).data[assert((sv).count > 0), (sv).count - 1]
 
 /**
  * @brief get the string view lenght
  * @param sv string view to be used
 */
-#define sv_len(sv) (sv).count
+#define SV_LEN(sv) (sv).count
 
 /**
  * @brief check whether the string view is empty (sv.data == "")
  * @param sv string view to be used
 */
-#define sv_empty(sv) ((sv).count == 0)
+#define SV_EMPTY(sv) ((sv).count == 0)
 
 /**
  * @brief check wether two string views are equal
