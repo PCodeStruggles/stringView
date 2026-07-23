@@ -1,10 +1,6 @@
 #ifndef SV_H
 #define SV_H
 
-/**
- * TODO: Add function to convert sv string to signed int.
-*/
-
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
@@ -33,14 +29,6 @@ typedef struct string_view {
  * @param C literal
  */
 #define SV_FROM_LIT(lit) (String_view) { .data = lit, .count = sizeof(lit) - 1 }
-
-/**
- * @brief create a string view from the cstr passed as argument
- * @param cstr R string
- * @return sv struct with sv.data = cstr and sv.count = strlen(cstr)
- * if cstr == NULL, returns an empty sv.
- */
-String_view sv_from_cstr(const char *cstr);
 
 /**
  * @brief get the character sv.data[pos]
@@ -72,6 +60,14 @@ String_view sv_from_cstr(const char *cstr);
  * @param sv string view to be used
 */
 #define SV_EMPTY(sv) ((sv).count == 0)
+
+/**
+ * @brief create a string view from the cstr passed as argument
+ * @param cstr R string
+ * @return sv struct with sv.data = cstr and sv.count = strlen(cstr)
+ * if cstr == NULL, returns an empty sv.
+ */
+String_view sv_from_cstr(const char *cstr);
 
 /**
  * @brief check wether two string views are equal
@@ -196,12 +192,12 @@ String_view sv_skip_n_chars(String_view sv, int n);
 String_view* sv_read_entire_file(const char* file_path);
 
 /**
- * @brief convert the String_view data into an uint64_t.
+ * @brief convert the String_view data into an int64_t.
  * @param the String_view to be converted to int.
- * @return uint64_t conversion of the String_view data. If a non-digit character
- * is encountered, returns 0.
+ * @return int64_t conversion of the String_view data. If a non-digit character
+ * is encountered, returns 0. If underflow or overflow occur, abort.
 */
-uint64_t sv_to_uint(String_view sv);
+int64_t sv_to_ll(String_view sv);
 
 /**
  * @brief convert the String_view data into an double.
@@ -458,16 +454,20 @@ cleanup:
     return NULL;
 }
 
-uint64_t sv_to_uint(String_view sv)
+int64_t sv_to_ll(String_view sv)
 {
     if(sv.count <= 0) return 0;
-    uint64_t result = 0;
-    for (int i = 0; i < sv.count; i++) {
-        if(sv.data[i] >= '0' && sv.data[i] <= '9') {
-            result = (result * 10) + (sv.data[i] - '0');
-        } else {
-            return 0;
-        }
+
+    char cstr[sv.count + 1];
+    memcpy(cstr, sv.data, sv.count);
+    cstr[sv.count] = '\0';
+
+    void* endptr = 0;
+    int64_t result =  strtoll(cstr, endptr, 10);
+
+    if(result == LLONG_MIN || result == LLONG_MAX) {
+        fprintf(stderr, "Could not convert `%.*s` to int64_t: %s\n", SV_ARG(sv), strerror(errno));
+        abort();
     }
     return result;
 }
@@ -477,7 +477,7 @@ double sv_to_double(String_view sv)
     if(sv.count <= 0) return 0;
     char cstr[sv.count + 1];
     memcpy(cstr, sv.data, sv.count);
-    cstr[sv.count + 1] = '\0';
+    cstr[sv.count] = '\0';
     void* endptr = 0;
     double result = strtod(cstr, endptr);
     if (cstr == endptr) return 0;

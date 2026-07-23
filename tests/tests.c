@@ -1328,38 +1328,52 @@ void sv_read_entire_file_sample1(void)
     TEST_ASSERT_EQUAL_size_t(file_size, file_content->count);
 }
 
-/* sv_to_uint */
+/* sv_to_ll */
 
-void sv_to_uint1(void)
+void sv_to_ll1(void)
 {
     const char* cstr_num= "1234";
     String_view sv = sv_from_cstr(cstr_num);
-    uint64_t converted_num = sv_to_uint(sv);
+    uint64_t converted_num = sv_to_ll(sv);
     TEST_ASSERT_EQUAL_INT64(1234, converted_num);
 }
 
-void sv_to_uint2(void)
+void sv_to_ll2(void)
 {
     const char* cstr_num= "0";
     String_view sv = sv_from_cstr(cstr_num);
-    uint64_t converted_num = sv_to_uint(sv);
+    uint64_t converted_num = sv_to_ll(sv);
     TEST_ASSERT_EQUAL_INT64(0, converted_num);
 }
 
-void sv_to_uint3(void)
+void sv_to_ll3(void)
 {
     const char* cstr_num= "abc";
     String_view sv = sv_from_cstr(cstr_num);
-    uint64_t converted_num = sv_to_uint(sv);
+    uint64_t converted_num = sv_to_ll(sv);
     TEST_ASSERT_EQUAL_INT64(0, converted_num);
 }
 
-void sv_to_uint4(void)
+void sv_to_ll4(void)
 {
     const char* cstr_num= "001";
     String_view sv = sv_from_cstr(cstr_num);
-    uint64_t converted_num = sv_to_uint(sv);
+    uint64_t converted_num = sv_to_ll(sv);
     TEST_ASSERT_EQUAL_INT64(1, converted_num);
+}
+
+void sv_to_ll5(void)
+{
+    String_view sv = SV_FROM_LIT("-10");
+    uint64_t converted_num = sv_to_ll(sv);
+    TEST_ASSERT_EQUAL_INT64(-10, converted_num);
+}
+
+void sv_to_ll6(void)
+{
+    String_view sv = SV_FROM_LIT("+10");
+    uint64_t converted_num = sv_to_ll(sv);
+    TEST_ASSERT_EQUAL_INT64(10, converted_num);
 }
 
 /* sv_to_double */
@@ -1522,15 +1536,17 @@ int main(void)
     RUN_TEST(sv_skip_n_chars_skippingUpToLastChar);
     RUN_TEST(sv_skip_n_chars_passingEmptySV);
     RUN_TEST(sv_skip_n_chars_passingNGreaterThanSvCount);
-    // RUN_TEST(sv_read_entire_file_sample1);
-    RUN_TEST(sv_to_uint1);
-    RUN_TEST(sv_to_uint2);
-    RUN_TEST(sv_to_uint3);
-    RUN_TEST(sv_to_uint4);
+    RUN_TEST(sv_read_entire_file_sample1);
+    RUN_TEST(sv_to_ll1);
+    RUN_TEST(sv_to_ll2);
+    RUN_TEST(sv_to_ll3);
+    RUN_TEST(sv_to_ll4);
+    RUN_TEST(sv_to_ll5);
+    RUN_TEST(sv_to_ll6);
     RUN_TEST(sv_to_double1);
     RUN_TEST(sv_to_double2);
     RUN_TEST(sv_to_double3);
-    RUN_TEST(sv_to_double4);    
+    RUN_TEST(sv_to_double4);
     RUN_TEST(sv_to_double_invalidInput);
     UNITY_END();
     return 0;
